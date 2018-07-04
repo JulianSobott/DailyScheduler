@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.dailyschedulerapp.dailyscheduler.utils.Time;
 
 public class TimeBox extends Widget {
-	private final float HEIGHT = 50.f;
-	private final float WIDTH = 50.f;
+	private final float HEIGHT = 30.f;
+	private final float WIDTH = 45.f;
 	
 	BitmapFont font = new BitmapFont(true);
 	public Time time = new Time(0);
@@ -28,15 +28,17 @@ public class TimeBox extends Widget {
 
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
-		sr.begin(ShapeType.Filled);
-		sr.setColor(new Color(0.7f, 0.7f, 0.7f, 1));
-		sr.rect(get_absolute_x(), get_absolute_y(), this.width, this.height);
-		sr.end();
-		
-		sb.begin();
-		font.draw(sb, time.toString(), get_absolute_x(), get_absolute_y());
-		sb.end();
-		super.render(sr, sb);
+		if(!is_hidden) {
+			sr.begin(ShapeType.Filled);
+			sr.setColor(new Color(0.7f, 0.7f, 0.7f, 1));
+			sr.rect(get_absolute_x(), get_absolute_y(), this.width, this.height);
+			sr.end();
+			
+			sb.begin();
+			font.draw(sb, time.toString(), get_absolute_x(), get_absolute_y() + this.height / 2 - font.getLineHeight()/2);
+			sb.end();
+			super.render(sr, sb);
+		}
 	}
 	
 	@Override

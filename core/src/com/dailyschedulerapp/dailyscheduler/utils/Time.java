@@ -13,15 +13,34 @@ public class Time {
 		this(hour, 0);
 	}
 	
+	public Time(Time t) {
+		this.hour = t.hour;
+		this.minute = t.minute;
+	}
+	
 	public String toString() {
 		return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : int_to_2decimals(minute));
 	}
 	
 	private int int_to_2decimals(int i) {
 		int new_int = i;
-		do {
+		while(new_int >= 100) {
 			new_int /= 10;
-		}while(new_int >= 100);
+		}
 		return new_int;
+	}
+
+	public void subtract(Time time) {
+		int min_1 = 60 - time.minute;
+		int min_2 = this.minute;
+		int min_end = min_1 + min_2;
+		int hour = 0;
+		if(min_end >= 60) {
+			hour += min_end / 60;
+			min_end -= hour * 60;
+		}
+		hour += this.hour - time.hour - 1;
+		this.minute = min_end;
+		this.hour = hour;
 	}
 }

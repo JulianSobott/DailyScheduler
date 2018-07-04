@@ -1,6 +1,8 @@
 package com.dailyschedulerapp.dailyscheduler.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -25,12 +27,14 @@ public class Dragger extends Widget{
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		if(!is_hidden) {
 			sr.begin(ShapeType.Filled);
 			if(is_active)
-				sr.setColor(new Color(0, 1, 0.3f, 1));
+				sr.setColor(new Color(0.5f, 0.7f, 0.5f, 1f));
 			else
-				sr.setColor(new Color(1, 0, 0.3f, 1));
+				sr.setColor(new Color(0.5f, 0.5f, 0.5f, 0.8f));
 			if(position == Position.relative_relative) {
 				sr.rect(get_absolute_x(), get_absolute_y(), WIDTH, HEIGHT);
 			}

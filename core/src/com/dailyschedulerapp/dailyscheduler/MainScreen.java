@@ -55,6 +55,14 @@ public class MainScreen extends Scene implements InputProcessor{
 		}
 		for(Widget widget : subWidgets) {
 			if(widget.check_on_click(new Vector2(screenX, screenY))) {
+				if(widget instanceof TaskField) {
+					int i = 0;
+					for(TaskField tf: taskFields) {
+						if(tf == widget)
+							idx_active_task_field = i;
+						i++;
+					}
+				}
 				return true;
 			}
 		}

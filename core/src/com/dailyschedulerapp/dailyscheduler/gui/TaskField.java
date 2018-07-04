@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.dailyschedulerapp.dailyscheduler.utils.Time;
 
 public class TaskField extends Widget{
 	private final float OUTLINE_THICKNESS = 2;
@@ -40,9 +41,13 @@ public class TaskField extends Widget{
 	}
 	
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
-		time_box_start.time = timeLine.map_y_to_time(time_box_start.get_absolute_y());
-		time_box_duration.time = timeLine.map_y_to_time(time_box_duration.get_absolute_y());
-		time_box_end.time = timeLine.map_y_to_time(time_box_end.get_absolute_y());
+		Time diff;
+		time_box_end.time = timeLine.map_y_to_time(this.get_absolute_y() + this.height);
+		diff = new Time(time_box_end.time);
+		time_box_start.time = timeLine.map_y_to_time(this.get_absolute_y());
+		diff.subtract(time_box_start.time);
+		time_box_duration.time = diff;
+		
 		
 		sr.begin(ShapeType.Filled);
 		sr.setColor(new Color(0.9f, 0.6f, 0.3f, 1));
@@ -54,9 +59,15 @@ public class TaskField extends Widget{
 		if(is_active) {
 			draggerBot.show();
 			draggerTop.show();
+			time_box_start.show();
+			time_box_duration.show();
+			time_box_end.show();
 		}else {
 			draggerBot.hide();
 			draggerTop.hide();
+			time_box_start.hide();
+			time_box_duration.hide();
+			time_box_end.hide();
 		}
 			
 		super.render(sr, sb);

@@ -3,7 +3,6 @@ package com.dailyschedulerapp.dailyscheduler.desktop;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.catangame.catan.local.Framework;
 import com.dailyschedulerapp.dailyscheduler.Main;
 
 public class DesktopLauncher {
