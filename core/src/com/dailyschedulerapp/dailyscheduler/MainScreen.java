@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.dailyschedulerapp.dailyscheduler.gui.Scene;
+import com.dailyschedulerapp.dailyscheduler.gui.TaskField;
+import com.dailyschedulerapp.dailyscheduler.gui.Timeline;
 import com.dailyschedulerapp.dailyscheduler.gui.Widget;
 
 public class MainScreen extends Scene implements InputProcessor{
@@ -59,7 +61,7 @@ public class MainScreen extends Scene implements InputProcessor{
 		
 		touchStart = new Vector2(screenX, screenY);
 		touchCurrent = touchStart;
-		TaskField taskField = new TaskField();
+		TaskField taskField = new TaskField(timeline);
 		taskField.set_start(screenY);
 		taskFields.add(taskField);
 		this.subWidgets.add(taskField);
@@ -77,7 +79,7 @@ public class MainScreen extends Scene implements InputProcessor{
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		touchCurrent = new Vector2(screenX, screenY);
-		taskFields.get(idx_active_task_field).update_position_down(screenY);
+		taskFields.get(idx_active_task_field).update_position(screenY);
 		return false;
 	}
 

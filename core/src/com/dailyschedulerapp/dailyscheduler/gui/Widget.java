@@ -10,12 +10,13 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class Widget {
 	
 	public enum Position {
-		absolute, relative
+		absolute_absolute, relative_relative, absolute_relative, relative_absolute
 	}
 	
-	protected Position position = Position.absolute;
+	protected Position position = Position.absolute_absolute;
 	protected float x, y, width, height;
-	protected boolean centered = false; //Origin of widget is in center or at top_left corner
+	protected boolean centered_x = false; //Origin of widget is in center or at top_left corner
+	protected boolean centered_y = false; //Origin of widget is in center or at top_left corner
 	protected boolean is_hidden = false;
 	protected Widget parent;
 	
@@ -35,21 +36,19 @@ public abstract class Widget {
 	}
 	
 	public float get_absolute_x() {
-		if(position == Position.absolute) {
+		if(position == Position.absolute_relative || position == Position.absolute_absolute) {
 			return this.x;
-		}else if(position == Position.relative) {
-			return this.parent.x + this.x * this.parent.width - (centered ? 0.5f * this.width : 0);
+		}else {
+			return this.parent.x + this.x * this.parent.width - (centered_x ? 0.5f * this.width : 0);
 		}
-		return 0;
 	}
 	
 	public float get_absolute_y() {
-		if(position == Position.absolute) {
+		if(position == Position.absolute_absolute || position == Position.relative_absolute) {
 			return this.y;
-		}else if(position == Position.relative) {
-			return this.parent.y + this.y * this.parent.height - (centered ? 0.5f * this.height : 0);
+		}else {
+			return this.parent.y + this.y * this.parent.height - (centered_y ? 0.5f * this.height : 0);
 		}
-		return 0;
 	}
 	
 	public void hide() {
