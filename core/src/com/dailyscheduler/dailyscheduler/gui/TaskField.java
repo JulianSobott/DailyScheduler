@@ -41,7 +41,7 @@ public class TaskField extends Widget{
 		is_active = true;
 		
 		//Textfield
-		textField = new Textfield(this);
+		textField = new Textfield(this, 0, 0, this.width, this.height, Position.relative_relative);
 		this.subWidgets.add(textField);
 	}
 	
@@ -80,13 +80,12 @@ public class TaskField extends Widget{
 	
 	public void update_position(float touchY) {
 		if(draggerTop.is_active) {
-			this.height += this.y - touchY;
-			this.y = touchY;
+			adjustBounds(this.x, touchY, this.width, this.height + this.y - touchY);
 		}
 		else if(draggerBot.is_active) {
-			this.height = touchY - this.y;
+			adjustHeight(touchY - this.y);
 		}else {
-			System.err.println("No Dragger is active to updtae in TaskField.update_position()");
+			System.err.println("No Dragger is active to update in TaskField.update_position()");
 		}
 		
 	}

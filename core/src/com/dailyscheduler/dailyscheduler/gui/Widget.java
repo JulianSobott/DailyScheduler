@@ -35,6 +35,30 @@ public abstract class Widget {
 		}
 	}
 	
+	public void adjustHeight(float new_height) {
+		adjustBounds(this.x, this.y, this.width, new_height);
+	}
+	
+	public void adjustBounds(float new_x, float new_y, float new_width, float new_height) {
+		this.x = new_x;
+		this.y = new_y;
+		this.width = new_width;
+		this.height = new_height;
+		
+		for(Widget w : subWidgets) {
+			w.adjustBounds();
+		}
+	}
+	
+	/**
+	 * Needs to be overwritten
+	 */
+	public void adjustBounds() {
+		for(Widget w : subWidgets) {
+			w.adjustBounds();
+		}
+	}
+	
 	public float get_absolute_x() {
 		if(position == Position.absolute_relative || position == Position.absolute_absolute) {
 			return this.x;
