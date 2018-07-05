@@ -13,12 +13,17 @@ public class TaskField extends Widget{
 	private final float OUTLINE_THICKNESS = 2;
 	private Dragger draggerTop, draggerBot;
 	private TimeBox time_box_start, time_box_duration, time_box_end; 
-	private Textfield textField;
+	private Label textField;
 	public boolean is_active = false;
 	
 	private Timeline timeLine;
 	
 	public TaskField(Timeline timeLine) {
+		//this
+		this.timeLine = timeLine;
+		this.bounds = new Bounds(50, 0, Gdx.graphics.getWidth() - 100, 0, 0);
+		is_active = true;
+				
 		//DRAGGER
 		draggerTop = new Dragger(this, 0.5f, 0);
 		this.subWidgets.add(draggerTop);
@@ -33,13 +38,10 @@ public class TaskField extends Widget{
 		this.subWidgets.add(time_box_start);
 		this.subWidgets.add(time_box_duration);
 		this.subWidgets.add(time_box_end);
-		//this
-		this.timeLine = timeLine;
-		this.bounds = new Bounds(50, 0, Gdx.graphics.getWidth() - 100, 0, 0);
-		is_active = true;
+		
 		
 		//Textfield
-		textField = new Textfield(this, 0, 0, 1.f, 1.f,
+		textField = new TextField(this, 0, 0, 1.f, 1.f,
 				Bounds.relative_x | Bounds.relative_y | Bounds.relative_width | Bounds.relative_height);
 		this.subWidgets.add(textField);
 	}

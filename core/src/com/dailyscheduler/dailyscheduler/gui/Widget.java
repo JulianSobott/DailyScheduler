@@ -44,7 +44,10 @@ public abstract class Widget {
 	
 	public float get_absolute_x() {
 		if(!bounds.isRelative(Bounds.relative_x)) {
-			return this.bounds.x;
+			if(this.parent == null)
+				return this.bounds.x;
+			else
+				return this.parent.get_absolute_x() + this.bounds.x;
 		}else {
 			return this.parent.bounds.x + this.bounds.x * this.parent.bounds.width - (centered_x ? 0.5f * this.bounds.width : 0);
 		}
@@ -52,7 +55,10 @@ public abstract class Widget {
 
 	public float get_absolute_y() {
 		if(!bounds.isRelative(Bounds.relative_y)) {
-			return this.bounds.y;
+			if(this.parent == null)
+				return this.bounds.y;
+			else
+				return this.parent.get_absolute_y() + this.bounds.y;
 		}else {
 			return this.parent.bounds.y + this.bounds.y * this.parent.bounds.height - (centered_y ? 0.5f * this.bounds.height : 0);
 		}
@@ -83,8 +89,8 @@ public abstract class Widget {
 	}
 	
 	public boolean check_on_click(Vector2 click_position) {
-		if(get_absolute_x() <= click_position.x && get_absolute_x() + this.bounds.width >= click_position.x) {
-			if(get_absolute_y() <= click_position.y && get_absolute_y() + this.bounds.height >= click_position.y)
+		if(get_absolute_x() <= click_position.x && get_absolute_x() + get_absolute_width() >= click_position.x) {
+			if(get_absolute_y() <= click_position.y && get_absolute_y() + get_absolute_height() >= click_position.y)
 				return true;
 			else
 				return false;
@@ -92,5 +98,13 @@ public abstract class Widget {
 		else {
 			return false;
 		}
+	}
+	
+	protected Vector2 global_position_to_inner_position(float x , float y) {
+		if(this.parent != null) {
+			x = x - this.parent.get_absolute_x();
+			y = y - this.parent.get_absolute_y();
+		}
+		return new Vector2(x, y);
 	}
 }

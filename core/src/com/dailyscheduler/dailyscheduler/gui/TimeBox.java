@@ -19,7 +19,7 @@ public class TimeBox extends Widget {
 	
 	public TimeBox(Widget parent, float y) {
 		super(parent);
-		this.bounds = new Bounds(Gdx.graphics.getWidth() - 50, 	y, WIDTH, HEIGHT, Bounds.relative_y);
+		this.bounds = new Bounds(this.parent.get_absolute_width(), 	y, WIDTH, HEIGHT, Bounds.relative_y);
 
 		this.centered_y = true;
 	}
