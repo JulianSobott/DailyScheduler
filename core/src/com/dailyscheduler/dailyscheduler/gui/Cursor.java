@@ -14,7 +14,8 @@ public class Cursor extends Widget{
 	private final float extra_height = 3;
 	private TextField textField;
 	
-	
+	private float blink_time = 0.7f;
+	private long last_toggle_time = 0;
 	
 	public Cursor(TextField tf) {
 		this.parent = tf;
@@ -25,11 +26,19 @@ public class Cursor extends Widget{
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
 		super.render(sr, sb);
-		calc_absolute_position();
-		sr.begin(ShapeType.Filled);
-		sr.setColor(new Color(.05f, 0.01f, 1.0f, 1));
-		sr.line(get_absolute_x(), get_absolute_y() - extra_height/2, get_absolute_x(), get_absolute_y() - extra_height/2 + get_absolute_height());
-		sr.end();
+		if(System.currentTimeMillis() - last_toggle_time > blink_time * 1000) {
+			this.is_hidden = !this.is_hidden;
+			last_toggle_time = System.currentTimeMillis();
+		}
+		if(!this.is_hidden) {
+			calc_absolute_position();
+			sr.begin(ShapeType.Filled);
+			sr.setColor(new Color(.05f, 0.01f, 1.0f, 1));
+			sr.line(get_absolute_x(), get_absolute_y() - extra_height/2, get_absolute_x(), get_absolute_y() - extra_height/2 + get_absolute_height());
+			sr.end();
+			
+		}
+		
 	}
 	
 	private void calc_absolute_position() {
@@ -61,5 +70,6 @@ public class Cursor extends Widget{
 			else
 				break;
 		}
+		this.is_hidden = false;
 	}
 }
