@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Align;
+import com.dailyscheduler.dailyscheduler.utils.Bounds;
 import com.dailyscheduler.dailyscheduler.utils.FontManager;
 
 public class Textfield extends Widget {
@@ -40,23 +41,24 @@ public class Textfield extends Widget {
 	 * @param y
 	 * @param width
 	 * @param height if 0 size is set to line_height 
-	 * @param position
+	 * @param position 
 	 */
-	public Textfield(Widget parent, float x, float y, float width, float height, Position position) {
+	public Textfield(Widget parent, float x, float y, float width, float height, int bounds_flags) {
 		super(parent);
-		init(x, y, width, height, position);
+		init(x, y, width, height, bounds_flags);
 	}
 
 	public Textfield() {
-		init(0, 0, 100, 0, Position.absolute_absolute);
+		init(0, 0, 100, 0, 0);
 	}
 
-	private void init(float x, float y, float width, float height, Position position) {
-		this.position = position;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = Math.max(FontManager.dp_to_pixel(FONT_SIZE_DP), height);
+	private void init(float x, float y, float width, float height, int bounds_flags) {
+		this.bounds = new Bounds(
+				x,
+				y,
+				width,
+				Bounds.isRelative(bounds_flags, Bounds.relative_height) ? height : Math.max(FontManager.dp_to_pixel(FONT_SIZE_DP), height),
+				bounds_flags);
 		setText("WOW WOW WOWO\n WOg");
 		this.idx_end_character = plain_text.length();
 		fitTextToField();
@@ -66,7 +68,7 @@ public class Textfield extends Widget {
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
 		
 		sr.begin(ShapeType.Filled);
-		sr.rect(get_absolute_x(), get_absolute_y(), this.width, this.height);
+		sr.rect(get_absolute_x(), get_absolute_y(), get_absolute_width(), get_absolute_height());
 		sr.end();
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -75,14 +77,20 @@ public class Textfield extends Widget {
 		sb.setColor(new Color(1, 0, 0, 0));
 		int idx_line = 0;
 		if(all_lines.size() == 1)
-			font.draw(sb, plain_text, get_absolute_x() + this.padding, get_absolute_y() + this.padding, idx_start_character, idx_end_character, this.width, Align.right, false);
+			font.draw(sb, plain_text, 
+					get_absolute_x() + this.padding,
+					get_absolute_y() + this.padding,
+					idx_start_character, idx_end_character,
+					get_absolute_width(), Align.right, false);
 		else {
 			for(String str : all_lines) {
-				font.draw(sb, str, get_absolute_x() + this.padding, get_absolute_y() + this.padding + idx_line * (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING));
-				idx_line++;
-				if(font.getLineHeight() * idx_line > this.height) {
+				if(font.getLineHeight() * (idx_line + 1) > get_absolute_height()) {
 					break;
 				}
+				font.draw(sb, str, 
+						get_absolute_x() + this.padding,
+						get_absolute_y() + this.padding + idx_line * (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING));
+				idx_line++;	
 			}
 		}
 		
@@ -97,23 +105,23 @@ public class Textfield extends Widget {
 			layout.setText(font, all_lines.get(all_lines.size() - 1));
 			int idx_last_new_line = 0;
 			int idx_line = 0;
-			while(layout.width > this.width && idx_last_new_line != -1 || idx_line < all_lines.size() - 1) { 
-				idx_last_new_line = addNewLine(idx_last_new_line, this.width, idx_line);
+			while(layout.width > this.bounds.width && idx_last_new_line != -1 || idx_line < all_lines.size() - 1) { 
+				idx_last_new_line = addNewLine(idx_last_new_line, get_absolute_width(), idx_line);
 				layout.setText(font, all_lines.get(all_lines.size() - 1));
 				idx_line++;
 			}			
 		}else {
-			int max_characters_per_line = (int)(this.width/getWidthOfChar());
+			int max_characters_per_line = (int)(this.bounds.width/getWidthOfChar());
 			idx_start_character = Math.max(plain_text.length() - max_characters_per_line , 0);
 			idx_end_character = plain_text.length();
 		}
 	}
 	
 	private void fitFieldToText() {
-		this.height = (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING) * all_lines.size() + 2 * padding;
+		this.bounds.height = (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING) * all_lines.size() + 2 * padding;
 		for(String str : all_lines) {
-			if(str.length() * getWidthOfChar() > this.width)
-				this.width = str.length() * getWidthOfChar();
+			if(str.length() * getWidthOfChar() > this.bounds.width)
+				this.bounds.width = str.length() * getWidthOfChar();
 		}
 	}
 	
@@ -161,12 +169,5 @@ public class Textfield extends Widget {
 			fitTextToField();
 		}
 	}
-	
-	@Override
-	public void adjustBounds() {
-		if(this.position == Position.relative_relative) {
-			
-		}
-		super.adjustBounds();
-	}
+
 }

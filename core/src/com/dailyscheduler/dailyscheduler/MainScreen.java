@@ -25,7 +25,6 @@ public class MainScreen extends Scene implements InputProcessor{
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
-		
 		super.render(sr, sb);
 		timeline.render(sr, sb);
 		for(TaskField taskField : taskFields) {

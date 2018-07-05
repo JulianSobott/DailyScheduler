@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.dailyscheduler.dailyscheduler.utils.Bounds;
 import com.dailyscheduler.dailyscheduler.utils.Time;
 
 public class TaskField extends Widget{
@@ -34,20 +35,18 @@ public class TaskField extends Widget{
 		this.subWidgets.add(time_box_end);
 		//this
 		this.timeLine = timeLine;
-		this.x = 50;
-		this.y = 0;
-		this.height = 0;
-		this.width = Gdx.graphics.getWidth() - 100;
+		this.bounds = new Bounds(50, 0, Gdx.graphics.getWidth() - 100, 0, 0);
 		is_active = true;
 		
 		//Textfield
-		textField = new Textfield(this, 0, 0, this.width, this.height, Position.relative_relative);
+		textField = new Textfield(this, 0, 0, 1.f, 1.f,
+				Bounds.relative_x | Bounds.relative_y | Bounds.relative_width | Bounds.relative_height);
 		this.subWidgets.add(textField);
 	}
 	
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
 		Time diff;
-		time_box_end.time = timeLine.map_y_to_time(this.get_absolute_y() + this.height);
+		time_box_end.time = timeLine.map_y_to_time(this.get_absolute_y() + this.bounds.height);
 		diff = new Time(time_box_end.time);
 		time_box_start.time = timeLine.map_y_to_time(this.get_absolute_y());
 		diff.subtract(time_box_start.time);
@@ -56,9 +55,9 @@ public class TaskField extends Widget{
 		
 		sr.begin(ShapeType.Filled);
 		sr.setColor(new Color(0.9f, 0.6f, 0.3f, 1));
-		sr.rect(x- OUTLINE_THICKNESS, y- OUTLINE_THICKNESS, width + 2 * OUTLINE_THICKNESS, height + 2*OUTLINE_THICKNESS);
+		sr.rect(bounds.x- OUTLINE_THICKNESS, bounds.y- OUTLINE_THICKNESS, bounds.width + 2 * OUTLINE_THICKNESS, bounds.height + 2*OUTLINE_THICKNESS);
 		sr.setColor(new Color(0.7f, 1, 0.3f, 1));
-		sr.rect(x, y, width, height);
+		sr.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		
 		sr.end();
 		if(is_active) {
@@ -80,10 +79,10 @@ public class TaskField extends Widget{
 	
 	public void update_position(float touchY) {
 		if(draggerTop.is_active) {
-			adjustBounds(this.x, touchY, this.width, this.height + this.y - touchY);
+			adjustBounds(this.bounds.x, touchY, this.bounds.width, this.bounds.height + this.bounds.y - touchY);
 		}
 		else if(draggerBot.is_active) {
-			adjustHeight(touchY - this.y);
+			adjustHeight(touchY - this.bounds.y);
 		}else {
 			System.err.println("No Dragger is active to update in TaskField.update_position()");
 		}
@@ -91,7 +90,7 @@ public class TaskField extends Widget{
 	}
 	
 	public void set_start(float y) {
-		this.y = y;
+		this.bounds.y = y;
 	}
 	
 	@Override

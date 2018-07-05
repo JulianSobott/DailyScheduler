@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.dailyscheduler.dailyscheduler.utils.Bounds;
 import com.dailyscheduler.dailyscheduler.utils.Time;
 
 public class TimeBox extends Widget {
@@ -18,11 +19,8 @@ public class TimeBox extends Widget {
 	
 	public TimeBox(Widget parent, float y) {
 		super(parent);
-		this.x = Gdx.graphics.getWidth() - 50;
-		this.y = y;
-		this.height = HEIGHT;
-		this.width= WIDTH;
-		this.position = Position.absolute_relative;
+		this.bounds = new Bounds(Gdx.graphics.getWidth() - 50, 	y, WIDTH, HEIGHT, Bounds.relative_y);
+
 		this.centered_y = true;
 	}
 
@@ -31,11 +29,11 @@ public class TimeBox extends Widget {
 		if(!is_hidden) {
 			sr.begin(ShapeType.Filled);
 			sr.setColor(new Color(0.7f, 0.7f, 0.7f, 1));
-			sr.rect(get_absolute_x(), get_absolute_y(), this.width, this.height);
+			sr.rect(get_absolute_x(), get_absolute_y(), this.bounds.width, this.bounds.height);
 			sr.end();
 			
 			sb.begin();
-			font.draw(sb, time.toString(), get_absolute_x(), get_absolute_y() + this.height / 2 - font.getLineHeight()/2);
+			font.draw(sb, time.toString(), get_absolute_x(), get_absolute_y() + this.bounds.height / 2 - font.getLineHeight()/2);
 			sb.end();
 			super.render(sr, sb);
 		}

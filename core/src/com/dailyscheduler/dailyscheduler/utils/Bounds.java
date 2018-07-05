@@ -13,14 +13,44 @@ public class Bounds{
 	public float width;
 	public float height;
 	
+	/**
+	 * all positions are absolute
+	 */
+	public Bounds() {
+		this(0, 0, 0, 0, 0);
+	}
+	
+	/**
+	 * @param flags indicates which positions are set to relative
+	 */
 	public Bounds(int flags) {
-		this.flags = flags; 
+		this(0, 0, 0, 0, flags);
+	}
+	
+	public Bounds(float x, float y, float width, float height, int flags) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.flags = flags;
 	}
 	
 	public boolean isRelative(int searched_position) {
-		if((this.flags & Bounds.relative_x) == Bounds.relative_x) {
+		if((this.flags & searched_position) == searched_position) {
 			return true;
 		}
+		return false;
+	}
+	
+	public static boolean isRelative(int given, int searched) {
+		if((given & searched) == searched) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean is_position_inside(Bounds position) {
+		//TODO implement this
 		return false;
 	}
 }

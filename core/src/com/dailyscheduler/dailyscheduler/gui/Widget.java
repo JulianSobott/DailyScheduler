@@ -6,15 +6,11 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.dailyscheduler.dailyscheduler.utils.Bounds;
 
 public abstract class Widget {
 	
-	public enum Position {
-		absolute_absolute, relative_relative, absolute_relative, relative_absolute
-	}
-	
-	protected Position position = Position.absolute_absolute;
-	protected float x, y, width, height;
+	protected Bounds bounds = new Bounds();
 	protected boolean centered_x = false; //Origin of widget is in center or at top_left corner
 	protected boolean centered_y = false; //Origin of widget is in center or at top_left corner
 	protected boolean is_hidden = false;
@@ -36,42 +32,45 @@ public abstract class Widget {
 	}
 	
 	public void adjustHeight(float new_height) {
-		adjustBounds(this.x, this.y, this.width, new_height);
+		adjustBounds(this.bounds.x, this.bounds.y, this.bounds.width, new_height);
 	}
 	
 	public void adjustBounds(float new_x, float new_y, float new_width, float new_height) {
-		this.x = new_x;
-		this.y = new_y;
-		this.width = new_width;
-		this.height = new_height;
-		
-		for(Widget w : subWidgets) {
-			w.adjustBounds();
-		}
-	}
-	
-	/**
-	 * Needs to be overwritten
-	 */
-	public void adjustBounds() {
-		for(Widget w : subWidgets) {
-			w.adjustBounds();
-		}
+		this.bounds.x = new_x;
+		this.bounds.y = new_y;
+		this.bounds.width = new_width;
+		this.bounds.height = new_height;
 	}
 	
 	public float get_absolute_x() {
-		if(position == Position.absolute_relative || position == Position.absolute_absolute) {
-			return this.x;
+		if(!bounds.isRelative(Bounds.relative_x)) {
+			return this.bounds.x;
 		}else {
-			return this.parent.x + this.x * this.parent.width - (centered_x ? 0.5f * this.width : 0);
+			return this.parent.bounds.x + this.bounds.x * this.parent.bounds.width - (centered_x ? 0.5f * this.bounds.width : 0);
+		}
+	}
+
+	public float get_absolute_y() {
+		if(!bounds.isRelative(Bounds.relative_y)) {
+			return this.bounds.y;
+		}else {
+			return this.parent.bounds.y + this.bounds.y * this.parent.bounds.height - (centered_y ? 0.5f * this.bounds.height : 0);
 		}
 	}
 	
-	public float get_absolute_y() {
-		if(position == Position.absolute_absolute || position == Position.relative_absolute) {
-			return this.y;
+	public float get_absolute_width() {
+		if(!bounds.isRelative(Bounds.relative_width)) {
+			return this.bounds.width;
 		}else {
-			return this.parent.y + this.y * this.parent.height - (centered_y ? 0.5f * this.height : 0);
+			return this.parent.bounds.width * this.bounds.width;
+		}
+	}
+	
+	public float get_absolute_height() {
+		if(!bounds.isRelative(Bounds.relative_height)) {
+			return this.bounds.height;
+		}else {
+			return this.parent.bounds.height * this.bounds.height;
 		}
 	}
 	
@@ -84,8 +83,8 @@ public abstract class Widget {
 	}
 	
 	public boolean check_on_click(Vector2 click_position) {
-		if(get_absolute_x() <= click_position.x && get_absolute_x() + this.width >= click_position.x) {
-			if(get_absolute_y() <= click_position.y && get_absolute_y() + this.height >= click_position.y)
+		if(get_absolute_x() <= click_position.x && get_absolute_x() + this.bounds.width >= click_position.x) {
+			if(get_absolute_y() <= click_position.y && get_absolute_y() + this.bounds.height >= click_position.y)
 				return true;
 			else
 				return false;

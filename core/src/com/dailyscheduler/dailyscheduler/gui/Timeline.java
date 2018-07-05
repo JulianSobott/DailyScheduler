@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.dailyscheduler.dailyscheduler.utils.Bounds;
 import com.dailyscheduler.dailyscheduler.utils.FontManager;
 import com.dailyscheduler.dailyscheduler.utils.Time;
 
@@ -19,10 +20,7 @@ public class Timeline extends Widget{
 	BitmapFont font = FontManager.getFont(24);
 	
 	public Timeline() {
-		this.x = 0;
-		this.y = 0;
-		this.width = Gdx.graphics.getWidth();
-		this.height = Gdx.graphics.getHeight();
+		this.bounds = new Bounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 0);
 		y_start = Gdx.graphics.getHeight() / (dayEnd.hour - dayStart.hour + 2);
 	}
 	
