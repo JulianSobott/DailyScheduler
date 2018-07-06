@@ -46,7 +46,7 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		
+		taskFields.get(this.idx_active_task_field).handle_char_input(character);
 		return false;
 	}
 

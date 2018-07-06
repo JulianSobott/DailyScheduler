@@ -120,6 +120,9 @@ public class TaskField extends Widget implements Clickable{
 	public void handle_key_input(int key_code) {
 		this.textField.handle_key_input(key_code);
 	}
+	public void handle_char_input(char c) {
+		this.textField.handle_char_input(c);
+	}
 
 	@Override
 	public void activate() {
@@ -134,6 +137,6 @@ public class TaskField extends Widget implements Clickable{
 			}
 		}
 	}
-	
+
 	
 }

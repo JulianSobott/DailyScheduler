@@ -76,9 +76,18 @@ public class TextField extends Label implements Clickable{
 		case Input.Keys.BACKSPACE:
 			delete_previous_to_cursor_char();
 			break;
+		case Input.Keys.SPACE:
+			add_char_at_cursor(' ');
+			break;
 		default:
 			break;
 		}
+	}
+	public void handle_char_input(char c) {
+		String all_possible_chars = "1234567890!\"§$%&/()=?{[]}\\ßqwertzuiopüasdfghjklöäyxcvbnmQWERTZUIOPÜASDFGHJKLÖÄYXCVBNM@€+*~#'<>|,;.:-_^°";
+		if(all_possible_chars.contains(String.valueOf(c))) {
+			add_char_at_cursor(c);
+		}	
 	}
 	
 	private void delete_previous_to_cursor_char() {
@@ -89,5 +98,18 @@ public class TextField extends Label implements Clickable{
 		}
 		this.cursor.move_left();	
 		
+	}
+	
+	private void add_char_at_cursor(char c) {
+		String currLine = this.all_lines.get(this.cursor.idx_line);
+		if(this.cursor.idx_position < currLine.length() - 1) {
+			String new_line = currLine.substring(0, this.cursor.idx_position ) + c +  currLine.substring(this.cursor.idx_position + 1);
+			this.all_lines.set(this.cursor.idx_line, new_line);
+		}else {
+			String new_line = currLine.substring(0, this.cursor.idx_position ) + c;
+			this.all_lines.set(this.cursor.idx_line, new_line);
+		}
+		
+		this.cursor.move_right();
 	}
 }
