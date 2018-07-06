@@ -3,6 +3,7 @@ package com.dailyscheduler.dailyscheduler.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -49,7 +50,10 @@ public abstract class Widget {
 			else
 				return this.parent.get_absolute_x() + this.bounds.x;
 		}else {
-			return this.parent.bounds.x + this.bounds.x * this.parent.bounds.width - (centered_x ? 0.5f * this.bounds.width : 0);
+			if(this.parent == null)
+				return 0 + this.bounds.x * Gdx.graphics.getWidth() - (centered_x ? 0.5f * this.bounds.width : 0);
+			else
+				return this.parent.bounds.x + this.bounds.x * this.parent.bounds.width - (centered_x ? 0.5f * this.bounds.width : 0);
 		}
 	}
 
@@ -60,7 +64,10 @@ public abstract class Widget {
 			else
 				return this.parent.get_absolute_y() + this.bounds.y;
 		}else {
-			return this.parent.bounds.y + this.bounds.y * this.parent.bounds.height - (centered_y ? 0.5f * this.bounds.height : 0);
+			if(this.parent == null)
+				return 0 + this.bounds.y * Gdx.graphics.getHeight() - (centered_y ? 0.5f * this.bounds.width : 0);
+			else
+				return this.parent.bounds.y + this.bounds.y * this.parent.bounds.height - (centered_y ? 0.5f * this.bounds.height : 0);
 		}
 	}
 	
@@ -68,7 +75,10 @@ public abstract class Widget {
 		if(!bounds.isRelative(Bounds.relative_width)) {
 			return this.bounds.width;
 		}else {
-			return this.parent.bounds.width * this.bounds.width;
+			if(this.parent == null)
+				return this.bounds.x * Gdx.graphics.getWidth();
+			else
+				return this.parent.bounds.width * this.bounds.width;
 		}
 	}
 	
@@ -76,7 +86,10 @@ public abstract class Widget {
 		if(!bounds.isRelative(Bounds.relative_height)) {
 			return this.bounds.height;
 		}else {
-			return this.parent.bounds.height * this.bounds.height;
+			if(this.parent == null)
+				return this.bounds.x * Gdx.graphics.getHeight();
+			else
+				return this.parent.bounds.height * this.bounds.height;
 		}
 	}
 	
