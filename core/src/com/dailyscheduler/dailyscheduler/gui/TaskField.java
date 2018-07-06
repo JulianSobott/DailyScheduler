@@ -9,11 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.dailyscheduler.dailyscheduler.utils.Bounds;
 import com.dailyscheduler.dailyscheduler.utils.Time;
 
-public class TaskField extends Widget{
+public class TaskField extends Widget implements Clickable{
 	private final float OUTLINE_THICKNESS = 2;
 	private Dragger draggerTop, draggerBot;
 	private TimeBox time_box_start, time_box_duration, time_box_end; 
-	private Label textField;
+	private TextField textField;
 	public boolean is_active = false;
 	
 	private Timeline timeLine;
@@ -112,9 +112,27 @@ public class TaskField extends Widget{
 		}
 		boolean clicked =  false;
 		if(clicked = super.check_on_click(click_position) || clicked_sub) {
-			is_active = true;
+			activate();
 		}
 		return clicked || clicked_sub;
+	}
+
+	public void handle_key_input(int key_code) {
+		this.textField.handle_key_input(key_code);
+	}
+
+	@Override
+	public void activate() {
+		
+	}
+
+	@Override
+	public void deactivate() {
+		for(Widget w : subWidgets) {
+			if(w instanceof Clickable) {
+				((Clickable) w).deactivate();
+			}
+		}
 	}
 	
 	

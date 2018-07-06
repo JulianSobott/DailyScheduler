@@ -1,5 +1,8 @@
 package com.dailyscheduler.dailyscheduler.utils;
 
+import com.badlogic.gdx.math.Vector2;
+import com.dailyscheduler.dailyscheduler.gui.Widget;
+
 public class Bounds{
 	public static final int relative_x 		= 0b0001;
 	public static final int relative_y 		= 0b0010;
@@ -49,8 +52,22 @@ public class Bounds{
 		return false;
 	}
 	
-	public boolean is_position_inside(Bounds position) {
-		//TODO implement this
+	public boolean is_position_inside_absolute_widget(Vector2 pos) {
+		if(this.flags != 0) {
+			if(this.x <= pos.x && this.x + this.width >= pos.x && this.y <= pos.y && this.y + this.height >= pos.y)
+				return true;
+		}
 		return false;
 	}
+	
+	public boolean is_position_inside(Vector2 pos, Widget corresponding_widget) {
+		if(		corresponding_widget.get_absolute_x() <= pos.x &&
+				corresponding_widget.get_absolute_x() + corresponding_widget.get_absolute_width() >= pos.x &&
+				corresponding_widget.get_absolute_y() <= pos.y &&
+				corresponding_widget.get_absolute_y() + corresponding_widget.get_absolute_height() >= pos.y)
+					return true;
+		else
+			return false;
+	}
+	
 }

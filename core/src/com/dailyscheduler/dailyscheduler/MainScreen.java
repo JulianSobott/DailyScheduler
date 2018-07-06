@@ -16,7 +16,6 @@ import com.dailyscheduler.dailyscheduler.gui.Widget;
 
 public class MainScreen extends Scene implements InputProcessor{
 	private Vector2 touchStart;
-	private Vector2 touchCurrent;
 	private int idx_active_task_field;
 	
 	public Timeline timeline = new Timeline();
@@ -34,7 +33,8 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+		
+		taskFields.get(this.idx_active_task_field).handle_key_input(keycode);
 		return false;
 	}
 
@@ -46,14 +46,14 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		for(TaskField tf : taskFields) {
-			tf.is_active = false;
+			tf.deactivate(); 
 		}
 		for(Widget widget : subWidgets) {
 			if(widget.check_on_click(new Vector2(screenX, screenY))) {
@@ -70,7 +70,6 @@ public class MainScreen extends Scene implements InputProcessor{
 		}
 		
 		touchStart = new Vector2(screenX, screenY);
-		touchCurrent = touchStart;
 		TaskField taskField = new TaskField(timeline);
 		taskField.set_start(screenY);
 		taskFields.add(taskField);
@@ -88,7 +87,6 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		touchCurrent = new Vector2(screenX, screenY);
 		taskFields.get(idx_active_task_field).update_position(screenY);
 		return false;
 	}

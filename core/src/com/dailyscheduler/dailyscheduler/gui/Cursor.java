@@ -9,7 +9,7 @@ import com.dailyscheduler.dailyscheduler.utils.Bounds;
 import com.dailyscheduler.dailyscheduler.utils.FontManager;
 
 public class Cursor extends Widget{
-	public int idx_position = 1;
+	public int idx_position = 0;
 	public int idx_line = 0;
 	private final float extra_height = 3;
 	private TextField textField;
@@ -21,6 +21,8 @@ public class Cursor extends Widget{
 		this.parent = tf;
 		this.textField = tf;
 		this.bounds = new Bounds();
+		this.idx_line = textField.all_lines.size() - 1;
+		this.idx_position = textField.all_lines.get(idx_line).length();
 	}
 	
 	@Override
@@ -30,7 +32,7 @@ public class Cursor extends Widget{
 			this.is_hidden = !this.is_hidden;
 			last_toggle_time = System.currentTimeMillis();
 		}
-		if(!this.is_hidden) {
+		if(!this.is_hidden && textField.is_active) {
 			calc_absolute_position();
 			sr.begin(ShapeType.Filled);
 			sr.setColor(new Color(.05f, 0.01f, 1.0f, 1));
@@ -38,7 +40,6 @@ public class Cursor extends Widget{
 			sr.end();
 			
 		}
-		
 	}
 	
 	private void calc_absolute_position() {
@@ -56,7 +57,9 @@ public class Cursor extends Widget{
 	
 	protected void set_indices_by_position(float x, float y) {
 		Vector2 inner_position = global_position_to_inner_position(x, y);
-		this.idx_line = (int)(inner_position.y / textField.getLineHeight());
+		this.idx_line = Math.max((int)(inner_position.y / textField.getLineHeight()), 0);
+		this.idx_line = Math.min(idx_line, textField.all_lines.size() - 1);
+		
 		this.idx_position = 0;
 		
 		float margin_left = 0;
@@ -70,6 +73,71 @@ public class Cursor extends Widget{
 			else
 				break;
 		}
+		this.idx_position = Math.min(idx_position, curr_line.length());
+		this.show();
+	}
+	
+	public void move_left() {
+		this.show();
+		if(this.idx_position > 0)
+			this.idx_position--;
+		else {
+			move_up();
+			move_end();
+		}
+			
+	}
+	
+	public void move_right() {
+		this.show();
+		if(this.idx_position < this.textField.all_lines.get(this.idx_line).length()) {
+			this.idx_position++;
+		}else {
+			if(this.idx_line < this.textField.all_lines.size() - 1) {
+				move_down();
+				move_pos1();
+			}
+			else
+				move_end();
+		}
+	}
+
+	public void move_up() {
+		this.show();
+		if(this.idx_line > 0) {
+			this.idx_line--;
+			if(this.idx_position > this.textField.all_lines.get(this.idx_line).length())
+				move_end();
+		}
+		else
+			move_pos1();
+	}
+
+	public void move_down() {
+		this.show();
+		if(this.idx_line < this.textField.all_lines.size() - 1) {
+			this.idx_line++;
+			if(this.idx_position > this.textField.all_lines.get(this.idx_line).length())
+				move_end();
+		}
+		else
+			move_end();
+	}
+	
+	public void move_pos1() {
+		this.show();
+		this.idx_position = 0;
+	}
+	
+	public void move_end() {
+		this.show();
+		this.idx_position = this.textField.all_lines.get(this.idx_line).length();
+	}
+	
+	
+	@Override
+	public void show() {
 		this.is_hidden = false;
+		last_toggle_time = System.currentTimeMillis();
 	}
 }

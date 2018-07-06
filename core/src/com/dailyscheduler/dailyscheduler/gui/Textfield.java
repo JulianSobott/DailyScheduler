@@ -1,11 +1,12 @@
 package com.dailyscheduler.dailyscheduler.gui;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
-public class TextField extends Label {
+public class TextField extends Label implements Clickable{
 	public boolean is_active;
 	private Cursor cursor;
 	
@@ -41,4 +42,52 @@ public class TextField extends Label {
 		return clicked;
 	}
 
+	@Override
+	public void activate() {
+		this.is_active = true;
+	}
+
+	@Override
+	public void deactivate() {
+		this.is_active = false;
+	}
+	
+	
+	public void handle_key_input(int key_code) {
+		switch (key_code) {
+		case Input.Keys.LEFT:
+			cursor.move_left();
+			break;
+		case Input.Keys.UP:
+			cursor.move_up();
+			break;
+		case Input.Keys.RIGHT:
+			cursor.move_right();
+			break;
+		case Input.Keys.DOWN:
+			cursor.move_down();
+			break;
+		case Input.Keys.END:
+			cursor.move_end();
+			break;
+		case Input.Buttons.BACK:
+			cursor.move_pos1();
+			break;
+		case Input.Keys.BACKSPACE:
+			delete_previous_to_cursor_char();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void delete_previous_to_cursor_char() {
+		String currLine = this.all_lines.get(this.cursor.idx_line);
+		if(this.cursor.idx_position > 0) {
+			String new_line = currLine.substring(0, this.cursor.idx_position - 1) + currLine.substring(this.cursor.idx_position);
+			this.all_lines.set(this.cursor.idx_line, new_line);
+		}
+		this.cursor.move_left();	
+		
+	}
 }

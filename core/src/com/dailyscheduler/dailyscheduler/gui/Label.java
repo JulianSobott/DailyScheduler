@@ -111,7 +111,7 @@ public class Label extends Widget {
 				idx_line++;
 			}			
 		}else {
-			int max_characters_per_line = (int)(this.bounds.width/getWidthOfChar());
+			int max_characters_per_line = (int)(this.bounds.width/getWidthOfCharW());
 			idx_start_character = Math.max(plain_text.length() - max_characters_per_line , 0);
 			idx_end_character = plain_text.length();
 		}
@@ -120,8 +120,9 @@ public class Label extends Widget {
 	protected void fitFieldToText() {
 		this.bounds.height = (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING) * all_lines.size() + 2 * padding;
 		for(String str : all_lines) {
-			if(str.length() * getWidthOfChar() > this.bounds.width)
-				this.bounds.width = str.length() * getWidthOfChar();
+			float width;
+			if((width = getWidthOfLine(str, FONT_SIZE_DP)) > this.bounds.width)
+				this.bounds.width = width;
 		}
 	}
 	
@@ -138,7 +139,7 @@ public class Label extends Widget {
 				idx_possible_new_line = idx_char;
 			}
 			idx_char++;
-			currentLineWidth += getWidthOfChar();
+			currentLineWidth += getWidthOfChar(c);
 			if(currentLineWidth > max_width) {
 				all_lines.set(idx_line,  curr_line.substring(0, idx_possible_new_line));
 				all_lines.add(idx_line + 1, curr_line.substring(idx_possible_new_line + 1));
@@ -150,12 +151,18 @@ public class Label extends Widget {
 		return -1;
 	}
 
-	protected float getWidthOfChar() {
+	protected float getWidthOfCharW() {
 		layout.setText(font, "W");
 		return layout.width;
 	}
 	
 	protected float getWidthOfChar(char c) {
+		layout.setText(font, Character.toString(c));
+		return layout.width;
+	}
+	protected static float getWidthOfChar(char c, int font_size_dp) {
+		BitmapFont font = FontManager.getFont(font_size_dp);
+		GlyphLayout layout = new GlyphLayout();
 		layout.setText(font, Character.toString(c));
 		return layout.width;
 	}
@@ -177,6 +184,16 @@ public class Label extends Widget {
 			}
 			fitTextToField();
 		}
+	}
+	
+	public static float getWidthOfLine(String line, int font_size_dp) {
+		char[] chars = new char[line.length()];	
+		line.getChars(0, line.length(), chars, 0);
+		float width = 0;
+		for(char c : chars) {
+			width += getWidthOfChar(c, font_size_dp);
+		}
+		return width;
 	}
 
 }
