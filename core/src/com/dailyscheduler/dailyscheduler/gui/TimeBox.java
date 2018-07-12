@@ -8,18 +8,21 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.dailyscheduler.dailyscheduler.utils.Bounds;
+import com.dailyscheduler.dailyscheduler.utils.FontManager;
 import com.dailyscheduler.dailyscheduler.utils.Time;
 
-public class TimeBox extends Widget {
+public class TimeBox extends Label {
 	private final float HEIGHT = 30.f;
 	private final float WIDTH = 45.f;
-	
-	BitmapFont font = new BitmapFont(true);
+
+	protected BitmapFont font = FontManager.getFont(24);
 	public Time time = new Time(0);
 	
-	public TimeBox(Widget parent, float y) {
-		super(parent);
-		this.bounds = new Bounds(this.parent.get_absolute_width(), 	y, WIDTH, HEIGHT, Bounds.relative_y);
+	public TimeBox(Widget parent, float y, float width) {
+		super();
+		this.parent = parent;
+		
+		this.bounds = new Bounds(this.parent.get_absolute_width(), 	y, width, getLineHeight(), Bounds.relative_y);
 
 		this.centered_y = true;
 	}
@@ -27,14 +30,8 @@ public class TimeBox extends Widget {
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
 		if(!is_hidden) {
-			sr.begin(ShapeType.Filled);
-			sr.setColor(new Color(0.7f, 0.7f, 0.7f, 1));
-			sr.rect(get_absolute_x(), get_absolute_y(), this.bounds.width, this.bounds.height);
-			sr.end();
 			
-			sb.begin();
-			font.draw(sb, time.toString(), get_absolute_x(), get_absolute_y() + this.bounds.height / 2 - font.getLineHeight()/2);
-			sb.end();
+			super.setText(time.toString()); //TODO extract to function
 			super.render(sr, sb);
 		}
 	}

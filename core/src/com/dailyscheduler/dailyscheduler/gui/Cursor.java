@@ -21,13 +21,13 @@ public class Cursor extends Widget{
 		this.parent = tf;
 		this.textField = tf;
 		this.bounds = new Bounds();
-		this.idx_line = textField.all_lines.size() - 1;
-		this.idx_position = textField.all_lines.get(idx_line).length();
+		this.idx_line = Math.max(textField.all_lines.size() - 1, 0);
+		this.idx_position = Math.max(textField.all_lines.size() == 0 ? 0 : textField.all_lines.get(idx_line).length() - 1, 0);
 	}
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
-		super.render(sr, sb);
+		/*super.render(sr, sb);
 		if(System.currentTimeMillis() - last_toggle_time > blink_time * 1000) {
 			this.is_hidden = !this.is_hidden;
 			last_toggle_time = System.currentTimeMillis();
@@ -39,11 +39,11 @@ public class Cursor extends Widget{
 			sr.line(get_absolute_x(), get_absolute_y() - extra_height/2, get_absolute_x(), get_absolute_y() - extra_height/2 + get_absolute_height());
 			sr.end();
 			
-		}
+		}*/
 	}
 	
 	private void calc_absolute_position() {
-		float margin_left = 0;
+		/*float margin_left = 0;
 		String curr_line = textField.all_lines.get(idx_line);
 		char[] chars = new char[curr_line.length()];
 		curr_line.getChars(0, curr_line.length(), chars, 0);
@@ -53,10 +53,11 @@ public class Cursor extends Widget{
 		this.bounds.x = margin_left + textField.padding;
 		this.bounds.y = idx_line * textField.getLineHeight() + textField.padding;
 		this.bounds.height = FontManager.dp_to_pixel(textField.FONT_SIZE_DP) + extra_height;
+		*/
 	}
 	
 	protected void set_indices_by_position(float x, float y) {
-		Vector2 inner_position = global_position_to_inner_position(x, y);
+		/*Vector2 inner_position = global_position_to_inner_position(x, y);
 		this.idx_line = Math.max((int)(inner_position.y / textField.getLineHeight()), 0);
 		this.idx_line = Math.min(idx_line, textField.all_lines.size() - 1);
 		
@@ -75,6 +76,7 @@ public class Cursor extends Widget{
 		}
 		this.idx_position = Math.min(idx_position, curr_line.length());
 		this.show();
+		*/
 	}
 	
 	public void move_left() {
@@ -85,7 +87,7 @@ public class Cursor extends Widget{
 			move_up();
 			move_end();
 		}
-			
+		
 	}
 	
 	public void move_right() {

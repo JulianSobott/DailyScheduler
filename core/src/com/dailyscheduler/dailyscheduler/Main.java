@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,8 +26,11 @@ public class Main extends ApplicationAdapter {
 	Texture img;
 	MainScreen mainScreen;
 	
+	private FPSLogger fpsLogger;
+	
 	public Main(DeviceMode deviceMode) {
 		this.deviceMode = deviceMode;
+		this.fpsLogger = new FPSLogger();
 	}
 	
 	@Override
@@ -94,6 +98,7 @@ public class Main extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		//this.fpsLogger.log();
 		Gdx.gl.glClearColor(0.4f, 0.5f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		sr.setProjectionMatrix(cam.combined);

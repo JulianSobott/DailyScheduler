@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.dailyscheduler.dailyscheduler.debug.Profiler;
+import com.dailyscheduler.dailyscheduler.gui.Label;
 import com.dailyscheduler.dailyscheduler.gui.Scene;
 import com.dailyscheduler.dailyscheduler.gui.TaskField;
 import com.dailyscheduler.dailyscheduler.gui.Timeline;
@@ -20,7 +22,6 @@ public class MainScreen extends Scene implements InputProcessor{
 	
 	public Timeline timeline = new Timeline();
 	public List<TaskField> taskFields = new ArrayList<TaskField>();
-	
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
@@ -51,7 +52,7 @@ public class MainScreen extends Scene implements InputProcessor{
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {		
 		for(TaskField tf : taskFields) {
 			tf.deactivate(); 
 		}
@@ -68,14 +69,14 @@ public class MainScreen extends Scene implements InputProcessor{
 				return true;
 			}
 		}
-		
+
 		touchStart = new Vector2(screenX, screenY);
 		TaskField taskField = new TaskField(timeline);
+
 		taskField.set_start(screenY);
 		taskFields.add(taskField);
 		this.subWidgets.add(taskField);
 		idx_active_task_field = taskFields.size() - 1;
-		
 		return false;
 	}
 
@@ -88,7 +89,7 @@ public class MainScreen extends Scene implements InputProcessor{
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		taskFields.get(idx_active_task_field).update_position(screenY);
-		return false;
+		return true;
 	}
 
 	@Override

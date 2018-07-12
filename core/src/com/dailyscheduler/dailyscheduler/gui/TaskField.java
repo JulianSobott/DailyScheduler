@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.dailyscheduler.dailyscheduler.debug.Profiler;
 import com.dailyscheduler.dailyscheduler.utils.Bounds;
 import com.dailyscheduler.dailyscheduler.utils.Time;
 
@@ -21,9 +22,10 @@ public class TaskField extends Widget implements Clickable{
 	public TaskField(Timeline timeLine) {
 		//this
 		this.timeLine = timeLine;
-		this.bounds = new Bounds(50, 0, Gdx.graphics.getWidth() - 100, 0, 0);
+		float limeline_width_leftColumn = timeLine.get_width_of_left_column();
+		this.bounds = new Bounds(limeline_width_leftColumn, 0, Gdx.graphics.getWidth() - limeline_width_leftColumn * 2, 0, 0);
 		is_active = true;
-				
+		
 		//DRAGGER
 		draggerTop = new Dragger(this, 0.5f, 0);
 		this.subWidgets.add(draggerTop);
@@ -32,13 +34,13 @@ public class TaskField extends Widget implements Clickable{
 		this.subWidgets.add(draggerBot);
 		
 		//TIME BOXES
-		time_box_start = new TimeBox(this, 0);
-		time_box_duration = new TimeBox(this, 0.5f);
-		time_box_end = new TimeBox(this, 1);
+		float timeBoxWidth = timeLine.get_width_of_left_column() - timeLine.MARGIN;
+		time_box_start = new TimeBox(this, 0,  timeBoxWidth);
+		time_box_duration = new TimeBox(this, 0.5f, timeBoxWidth);
+		time_box_end = new TimeBox(this, 1, timeBoxWidth);
 		this.subWidgets.add(time_box_start);
 		this.subWidgets.add(time_box_duration);
 		this.subWidgets.add(time_box_end);
-		
 		
 		//Textfield
 		textField = new TextField(this, 0, 0, 1.f, 1.f,
@@ -62,19 +64,7 @@ public class TaskField extends Widget implements Clickable{
 		sr.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		
 		sr.end();
-		if(is_active) {
-			draggerBot.show();
-			draggerTop.show();
-			time_box_start.show();
-			time_box_duration.show();
-			time_box_end.show();
-		}else {
-			draggerBot.hide();
-			draggerTop.hide();
-			time_box_start.hide();
-			time_box_duration.hide();
-			time_box_end.hide();
-		}
+		
 			
 		super.render(sr, sb);
 	}
@@ -85,8 +75,6 @@ public class TaskField extends Widget implements Clickable{
 		}
 		else if(draggerBot.is_active) {
 			adjustHeight(touchY - this.bounds.y);
-		}else {
-			System.err.println("No Dragger is active to update in TaskField.update_position()");
 		}
 		
 	}
@@ -98,6 +86,8 @@ public class TaskField extends Widget implements Clickable{
 	@Override
 	public boolean check_on_click(Vector2 click_position) {
 		boolean clicked_sub = false;
+		draggerBot.is_active = false;
+		draggerTop.is_active = false;
 		for(Widget w : subWidgets) {
 			if(w.check_on_click(click_position)) {
 				clicked_sub = true;
@@ -126,7 +116,7 @@ public class TaskField extends Widget implements Clickable{
 
 	@Override
 	public void activate() {
-		
+		show();
 	}
 
 	@Override
@@ -136,7 +126,28 @@ public class TaskField extends Widget implements Clickable{
 				((Clickable) w).deactivate();
 			}
 		}
+		hideSubWidgets();
 	}
 
+	@Override
+	public void show() {
+		draggerBot.show();
+		draggerTop.show();
+		time_box_start.show();
+		time_box_duration.show();
+		time_box_end.show();
+	}
+	@Override
+	public void hide() {
+		hideSubWidgets();
+	}
+	
+	public void hideSubWidgets() {
+		draggerBot.hide();
+		draggerTop.hide();
+		time_box_start.hide();
+		time_box_duration.hide();
+		time_box_end.hide();
+	}
 	
 }

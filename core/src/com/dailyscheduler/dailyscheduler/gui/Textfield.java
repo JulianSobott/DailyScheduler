@@ -1,5 +1,8 @@
 package com.dailyscheduler.dailyscheduler.gui;
 
+import java.io.UnsupportedEncodingException;
+import java.util.regex.Pattern;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -84,10 +87,10 @@ public class TextField extends Label implements Clickable{
 		}
 	}
 	public void handle_char_input(char c) {
-		String all_possible_chars = "1234567890!\"§$%&/()=?{[]}\\ßqwertzuiopüasdfghjklöäyxcvbnmQWERTZUIOPÜASDFGHJKLÖÄYXCVBNM@€+*~#'<>|,;.:-_^°";
-		if(all_possible_chars.contains(String.valueOf(c))) {
+		String all_possible_chars = "[0-9a-zA-Z~#;:?/@&!\"'Â´`%*=Â¬.,-^\\s]+";
+		if(String.valueOf(c).matches(all_possible_chars)) {
 			add_char_at_cursor(c);
-		}	
+		}	  
 	}
 	
 	private void delete_previous_to_cursor_char() {
@@ -108,8 +111,8 @@ public class TextField extends Label implements Clickable{
 		}else {
 			String new_line = currLine.substring(0, this.cursor.idx_position ) + c;
 			this.all_lines.set(this.cursor.idx_line, new_line);
+			//super.add_new_line_text("");
 		}
-		
 		this.cursor.move_right();
 	}
 }

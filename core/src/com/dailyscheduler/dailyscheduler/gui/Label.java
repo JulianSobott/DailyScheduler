@@ -1,7 +1,10 @@
 package com.dailyscheduler.dailyscheduler.gui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -20,7 +23,7 @@ public class Label extends Widget {
 
 	protected String plain_text = "";
 	protected String formatted_text = "";
-	protected List<String> all_lines = new ArrayList<String>();
+	public List<String> all_lines = new LinkedList<String>(); 
 	
 	protected BitmapFont font = FontManager.getFont(24);
 	protected GlyphLayout layout = new GlyphLayout();
@@ -34,6 +37,8 @@ public class Label extends Widget {
 	private int idx_start_character = 0;
 	private int idx_end_character = 0;
 	
+	
+	private static Map<String, Float> width_of_string_cache = new HashMap<>(); 
 	/**
 	 * 
 	 * @param parent
@@ -59,97 +64,36 @@ public class Label extends Widget {
 				width,
 				Bounds.isRelative(bounds_flags, Bounds.relative_height) ? height : Math.max(FontManager.dp_to_pixel(FONT_SIZE_DP), height),
 				bounds_flags);
-		setText("ioWeCg H--@ lovt ÜWW D\nVWWqooooiii");
+
 		this.idx_end_character = plain_text.length();
-		fitTextToField();
+
 	}
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
 		
 		sr.begin(ShapeType.Filled);
+		sr.setColor(new Color(0.8f, 0.8f, 0.8f, 1));
 		sr.rect(get_absolute_x(), get_absolute_y(), get_absolute_width(), get_absolute_height());
 		sr.end();
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sb.begin();
-		sb.setColor(new Color(1, 0, 0, 0));
-		int idx_line = 0;
-		if(all_lines.size() == 1)
-			font.draw(sb, plain_text, 
-					get_absolute_x() + this.padding,
-					get_absolute_y() + this.padding,
-					idx_start_character, idx_end_character,
-					get_absolute_width(), Align.right, false);
-		else {
-			for(String str : all_lines) {
-				if(font.getLineHeight() * (idx_line + 1) > get_absolute_height()) {
-					break;
-				}
-				font.draw(sb, str, 
-						get_absolute_x() + this.padding,
-						get_absolute_y() + this.padding + idx_line * getLineHeight());
-				idx_line++;	
-			}
-		}
-		
-		
+		sb.setColor(new Color(1, 0, 0, 1));
+		font.draw(sb, plain_text, get_absolute_x(), get_absolute_y(), idx_start_character, idx_end_character, get_absolute_width(), Align.topLeft, true);
 		sb.end();
 		super.render(sr, sb);
 	}
 	
 	protected void fitTextToField() {
-		if(auto_line_break || !is_in_one_line) {
-			formatted_text = plain_text;
-			layout.setText(font, all_lines.get(all_lines.size() - 1));
-			int idx_last_new_line = 0;
-			int idx_line = 0;
-			while(layout.width > this.bounds.width && idx_last_new_line != -1 || idx_line < all_lines.size() - 1) { 
-				idx_last_new_line = addNewLine(idx_last_new_line, get_absolute_width(), idx_line);
-				layout.setText(font, all_lines.get(all_lines.size() - 1));
-				idx_line++;
-			}			
-		}else {
-			int max_characters_per_line = (int)(this.bounds.width/getWidthOfCharW());
-			idx_start_character = Math.max(plain_text.length() - max_characters_per_line , 0);
-			idx_end_character = plain_text.length();
-		}
+		this.idx_end_character = this.plain_text.length();
 	}
 	
 	protected void fitFieldToText() {
-		this.bounds.height = (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING) * all_lines.size() + 2 * padding;
-		for(String str : all_lines) {
-			float width;
-			if((width = getWidthOfLine(str, FONT_SIZE_DP)) > this.bounds.width)
-				this.bounds.width = width;
-		}
+		
 	}
 	
-	private int addNewLine(int idx_last_new_line, float max_width, int idx_line) {	
-		int currentLineWidth = 0;
-		int idx_possible_new_line = 0;
-		int idx_char = 0;
-		String curr_line = all_lines.get(idx_line);
-		char[] chars = new char[curr_line.length()];
-		
-		curr_line.getChars(0, curr_line.length(), chars, 0);
-		for(char c : chars) {
-			if(c == ' ') {
-				idx_possible_new_line = idx_char;
-			}
-			idx_char++;
-			currentLineWidth += getWidthOfChar(c);
-			if(currentLineWidth > max_width) {
-				all_lines.set(idx_line,  curr_line.substring(0, idx_possible_new_line));
-				all_lines.add(idx_line + 1, curr_line.substring(idx_possible_new_line + 1));
-				formatted_text = formatted_text.substring(idx_last_new_line, idx_possible_new_line) + '\n' + formatted_text.substring(idx_possible_new_line + 1);
-				idx_last_new_line = idx_possible_new_line;
-				return idx_last_new_line;
-			}
-		}
-		return -1;
-	}
 
 	protected float getWidthOfCharW() {
 		layout.setText(font, "W");
@@ -171,28 +115,32 @@ public class Label extends Widget {
 		return (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING);
 	}
 	
-	public void setText(String plainText) {
-		this.plain_text = plainText;
-		all_lines.add(plainText);
-		if(auto_line_break || !is_in_one_line) {
-			int idx;
-			this.formatted_text = new String(plainText);
-			while((idx = formatted_text.indexOf('\n')) != -1) {
-				all_lines.set(all_lines.size() - 1,  formatted_text.substring(0, idx));
-				formatted_text = formatted_text.substring(idx + 1);
-				all_lines.add(formatted_text);
-			}
-			fitTextToField();
-		}
+	public void addChar(char c) {
+		this.plain_text.concat(Character.toString(c));
+		fitTextToField();
+	}
+	
+	public void setText(String text) {
+		this.plain_text = text;
+		fitTextToField();
+	}
+	
+	public int getNumLines() {
+		layout.setText(font, plain_text, idx_start_character, idx_end_character, new Color(1, 1, 1, 1), get_absolute_width(), Align.topLeft, auto_line_break, null);
+		return (int)((layout.height - font.getData().capHeight) / (font.getData().lineHeight));
 	}
 	
 	public static float getWidthOfLine(String line, int font_size_dp) {
+		if(width_of_string_cache.containsKey(line)) {
+			return width_of_string_cache.get(line);
+		}
 		char[] chars = new char[line.length()];	
 		line.getChars(0, line.length(), chars, 0);
 		float width = 0;
 		for(char c : chars) {
 			width += getWidthOfChar(c, font_size_dp);
 		}
+		width_of_string_cache.put(line, width);
 		return width;
 	}
 
