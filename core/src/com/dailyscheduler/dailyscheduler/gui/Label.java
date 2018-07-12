@@ -81,7 +81,7 @@ public class Label extends Widget {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sb.begin();
 		sb.setColor(new Color(1, 0, 0, 1));
-		font.draw(sb, plain_text, get_absolute_x(), get_absolute_y(), idx_start_character, idx_end_character, get_absolute_width(), Align.topLeft, true);
+		font.draw(sb, plain_text, get_absolute_x() + padding, get_absolute_y() + padding, idx_start_character, idx_end_character, get_absolute_width() - padding, Align.topLeft, true);
 		sb.end();
 		super.render(sr, sb);
 	}
@@ -116,7 +116,7 @@ public class Label extends Widget {
 	}
 	
 	public void addChar(char c) {
-		this.plain_text.concat(Character.toString(c));
+		this.plain_text += c;
 		fitTextToField();
 	}
 	

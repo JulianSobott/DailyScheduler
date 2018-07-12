@@ -89,7 +89,8 @@ public class TextField extends Label implements Clickable{
 	public void handle_char_input(char c) {
 		String all_possible_chars = "[0-9a-zA-Z~#;:?/@&!\"'´`%*=¬.,-^\\s]+";
 		if(String.valueOf(c).matches(all_possible_chars)) {
-			add_char_at_cursor(c);
+			super.addChar(c);
+			//add_char_at_cursor(c);
 		}	  
 	}
 	

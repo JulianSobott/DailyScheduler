@@ -116,11 +116,13 @@ public class TaskField extends Widget implements Clickable{
 
 	@Override
 	public void activate() {
+		this.is_active = true;
 		show();
 	}
 
 	@Override
 	public void deactivate() {
+		this.is_active = false;
 		for(Widget w : subWidgets) {
 			if(w instanceof Clickable) {
 				((Clickable) w).deactivate();
