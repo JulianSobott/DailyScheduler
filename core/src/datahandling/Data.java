@@ -10,5 +10,9 @@ public class Data {
 	public Data() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	
+	public Task lastTask() {
+		return all_tasks.get(all_tasks.size() - 1);
+	}
 }

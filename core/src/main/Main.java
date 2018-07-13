@@ -40,8 +40,8 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void create () {
 		dataHandler = new DataHandler();
-		dataHandler.addNewTask(new Task());
-		dataHandler.save();
+		//dataHandler.addNewTask(new Task());
+		//dataHandler.save();
 		dataHandler.load();
 		
 		sb = new SpriteBatch();

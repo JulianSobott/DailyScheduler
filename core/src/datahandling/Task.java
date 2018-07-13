@@ -10,17 +10,13 @@ public class Task {
 	public String body;
 	
 	public Task() {
-		//TODO del
-		start = new Time(8);
-		end = new Time(8, 20);
-		body = "test body TODO";
 	}
 
 	@Override
 	public String toString() {
 		String str = "";
-		str += 	start.toString() + "\n" +
-				end.toString() + "\n" +
+		str += 	Time.toInt(start) + "\n" +
+				Time.toInt(end) + "\n" +
 				body + "\n"
 				;
 		return str;
