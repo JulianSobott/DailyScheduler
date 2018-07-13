@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import java.util.ArrayList;
 import java.util.List;

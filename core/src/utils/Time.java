@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.utils;
+package utils;
 
 public class Time {
 	public int hour;

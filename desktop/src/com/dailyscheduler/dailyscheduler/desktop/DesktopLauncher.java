@@ -3,7 +3,8 @@ package com.dailyscheduler.dailyscheduler.desktop;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.dailyscheduler.dailyscheduler.Main;
+
+import main.Main;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

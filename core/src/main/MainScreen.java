@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler;
+package main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.gui.Scene;
-import com.dailyscheduler.dailyscheduler.gui.TaskField;
-import com.dailyscheduler.dailyscheduler.gui.Timeline;
-import com.dailyscheduler.dailyscheduler.gui.Widget;
+
+import gui.Scene;
+import gui.TaskField;
+import gui.Timeline;
+import gui.Widget;
 
 public class MainScreen extends Scene implements InputProcessor{
 	private Vector2 touchStart;

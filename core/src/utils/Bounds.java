@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.utils;
+package utils;
 
 public class Bounds{
 	public static final int relative_x 		= 0b0001;

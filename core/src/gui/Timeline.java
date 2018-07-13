@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -7,8 +7,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.dailyscheduler.dailyscheduler.utils.FontManager;
-import com.dailyscheduler.dailyscheduler.utils.Time;
+
+import utils.FontManager;
+import utils.Time;
 
 public class Timeline extends Widget{
 	final Time dayStart = new Time(7);

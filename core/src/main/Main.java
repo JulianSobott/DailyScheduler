@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler;
+package main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +13,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 
+import datahandling.Data;
+import datahandling.DataHandler;
+import datahandling.ServerCommunicator;
+import datahandling.Task;
+
 public class Main extends ApplicationAdapter {
 	public enum DeviceMode {
 		DESKTOP, MOBILE
@@ -25,12 +30,20 @@ public class Main extends ApplicationAdapter {
 	Texture img;
 	MainScreen mainScreen;
 	
+	//data
+	public DataHandler dataHandler;
+	
 	public Main(DeviceMode deviceMode) {
 		this.deviceMode = deviceMode;
 	}
 	
 	@Override
 	public void create () {
+		dataHandler = new DataHandler();
+		dataHandler.addNewTask(new Task());
+		dataHandler.save();
+		dataHandler.load();
+		
 		sb = new SpriteBatch();
 		sr = new ShapeRenderer();
 		cam = new OrthographicCamera();

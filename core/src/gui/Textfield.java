@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,8 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Align;
-import com.dailyscheduler.dailyscheduler.utils.FontManager;
+
+import utils.FontManager;
 
 public class Textfield extends Widget {
 

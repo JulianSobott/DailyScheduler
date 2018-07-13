@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.utils.Time;
+
+import utils.Time;
 
 public class TaskField extends Widget{
 	private final float OUTLINE_THICKNESS = 2;
