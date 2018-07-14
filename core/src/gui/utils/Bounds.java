@@ -1,7 +1,8 @@
-package com.dailyscheduler.dailyscheduler.utils;
+package gui.utils;
 
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.gui.Widget;
+
+import gui.Widget;
 
 public class Bounds{
 	public static final int relative_x 		= 0b0001;

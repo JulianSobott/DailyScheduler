@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
@@ -9,16 +9,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
-public class TextField extends Label implements Clickable{
+public class Textfield extends Label implements Clickable{
 	public boolean is_active;
 	private Cursor cursor;
 	
-	public TextField(Widget parent, float x, float y, float width, float height, int bounds_flags) {
+	public Textfield(Widget parent, float x, float y, float width, float height, int bounds_flags) {
 		super(parent, x, y, width, height,bounds_flags);
 		init();
 	}
 
-	public TextField() {
+	public Textfield() {
 		super();
 		init();
 	}

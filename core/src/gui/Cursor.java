@@ -1,23 +1,24 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.utils.Bounds;
-import com.dailyscheduler.dailyscheduler.utils.FontManager;
+
+import gui.utils.Bounds;
+import utils.FontManager;
 
 public class Cursor extends Widget{
 	public int idx_position = 0;
 	public int idx_line = 0;
 	private final float extra_height = 3;
-	private TextField textField;
+	private Textfield textField;
 	
 	private float blink_time = 0.7f;
 	private long last_toggle_time = 0;
 	
-	public Cursor(TextField tf) {
+	public Cursor(Textfield tf) {
 		this.parent = tf;
 		this.textField = tf;
 		this.bounds = new Bounds();

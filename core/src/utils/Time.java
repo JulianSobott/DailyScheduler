@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.utils;
+package utils;
 
 import java.time.LocalDateTime;
 

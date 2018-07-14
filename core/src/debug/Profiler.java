@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.debug;
+package debug;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler;
+package main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.debug.Profiler;
-import com.dailyscheduler.dailyscheduler.gui.Label;
-import com.dailyscheduler.dailyscheduler.gui.Scene;
-import com.dailyscheduler.dailyscheduler.gui.TaskField;
-import com.dailyscheduler.dailyscheduler.gui.Timeline;
-import com.dailyscheduler.dailyscheduler.gui.Widget;
+
+import debug.Profiler;
+import gui.Label;
+import gui.Scene;
+import gui.TaskField;
+import gui.Textarea;
+import gui.Timeline;
+import gui.Widget;
 
 public class MainScreen extends Scene implements InputProcessor{
 	private Vector2 touchStart;
@@ -25,6 +27,7 @@ public class MainScreen extends Scene implements InputProcessor{
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
+
 		super.render(sr, sb);
 		timeline.render(sr, sb);
 		for(TaskField taskField : taskFields) {
@@ -34,8 +37,10 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if(taskFields.size() > 0) {
+			taskFields.get(this.idx_active_task_field).handle_key_input(keycode);
+		}
 		
-		taskFields.get(this.idx_active_task_field).handle_key_input(keycode);
 		return false;
 	}
 
@@ -47,7 +52,10 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		taskFields.get(this.idx_active_task_field).handle_char_input(character);
+		if(taskFields.size() > 0) {
+			taskFields.get(this.idx_active_task_field).handle_char_input(character);
+		}
+		
 		return true;
 	}
 

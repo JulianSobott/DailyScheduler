@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -6,15 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.debug.Profiler;
-import com.dailyscheduler.dailyscheduler.utils.Bounds;
-import com.dailyscheduler.dailyscheduler.utils.Time;
+
+import debug.Profiler;
+import gui.utils.Bounds;
+import utils.Time;
 
 public class TaskField extends Widget implements Clickable{
 	private final float OUTLINE_THICKNESS = 2;
 	private Dragger draggerTop, draggerBot;
 	private TimeBox time_box_start, time_box_duration, time_box_end; 
-	private TextField textField;
+	private Textfield textField;
 	public boolean is_active = false;
 	
 	private Timeline timeLine;
@@ -43,7 +44,7 @@ public class TaskField extends Widget implements Clickable{
 		this.subWidgets.add(time_box_end);
 		
 		//Textfield
-		textField = new TextField(this, 0, 0, 1.f, 1.f,
+		textField = new Textfield(this, 0, 0, 1.f, 1.f,
 				Bounds.relative_x | Bounds.relative_y | Bounds.relative_width | Bounds.relative_height);
 		this.subWidgets.add(textField);
 	}

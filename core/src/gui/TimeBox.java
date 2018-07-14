@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.utils.Bounds;
-import com.dailyscheduler.dailyscheduler.utils.FontManager;
-import com.dailyscheduler.dailyscheduler.utils.Time;
+
+import gui.utils.Bounds;
+import utils.FontManager;
+import utils.Time;
 
 public class TimeBox extends Label {
 	private final float HEIGHT = 30.f;

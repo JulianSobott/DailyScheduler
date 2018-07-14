@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.gui;
+package gui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.utils.Bounds;
+
+import gui.utils.Bounds;
+import gui.utils.Style;
 
 public abstract class Widget {
 	
@@ -16,6 +18,7 @@ public abstract class Widget {
 	protected boolean centered_y = false; //Origin of widget is in center or at top_left corner
 	protected boolean is_hidden = false;
 	protected Widget parent;
+	protected Style style = new Style();
 	
 	protected List<Widget> subWidgets = new ArrayList<Widget>();
 	
