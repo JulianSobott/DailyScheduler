@@ -15,7 +15,7 @@ public class TaskField extends Widget implements Clickable{
 	private final float OUTLINE_THICKNESS = 2;
 	private Dragger draggerTop, draggerBot;
 	private TimeBox time_box_start, time_box_duration, time_box_end; 
-	private Textfield textField;
+	private Textarea textarea;
 	public boolean is_active = false;
 	
 	private Timeline timeLine;
@@ -44,9 +44,10 @@ public class TaskField extends Widget implements Clickable{
 		this.subWidgets.add(time_box_end);
 		
 		//Textfield
-		textField = new Textfield(this, 0, 0, 1.f, 1.f,
+		textarea = new Textarea(this, 0, 0, 1f, 1.f,
 				Bounds.relative_x | Bounds.relative_y | Bounds.relative_width | Bounds.relative_height);
-		this.subWidgets.add(textField);
+		textarea.setText("WOW");
+		this.subWidgets.add(textarea);
 	}
 	
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
@@ -97,9 +98,7 @@ public class TaskField extends Widget implements Clickable{
 					draggerTop.is_active = false;
 					((Dragger) w).is_active = true;
 				}
-			}
-			
-			
+			}	
 		}
 		boolean clicked =  false;
 		if(clicked = super.check_on_click(click_position) || clicked_sub) {
@@ -109,10 +108,10 @@ public class TaskField extends Widget implements Clickable{
 	}
 
 	public void handle_key_input(int key_code) {
-		this.textField.handle_key_input(key_code);
+		this.textarea.handle_key_input(key_code);
 	}
 	public void handle_char_input(char c) {
-		this.textField.handle_char_input(c);
+		this.textarea.handle_char_input(c);
 	}
 
 	@Override
@@ -151,6 +150,11 @@ public class TaskField extends Widget implements Clickable{
 		time_box_start.hide();
 		time_box_duration.hide();
 		time_box_end.hide();
+	}
+
+	@Override
+	protected void update() {
+		
 	}
 	
 }

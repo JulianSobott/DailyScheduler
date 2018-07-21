@@ -111,4 +111,10 @@ public class MainScreen extends Scene implements InputProcessor{
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	protected void update() {
+		// TODO Auto-generated method stub
+		
+	}
 }

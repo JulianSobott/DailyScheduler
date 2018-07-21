@@ -82,4 +82,10 @@ public class Timeline extends Widget{
 	public float get_width_of_left_column(){
 		return  Label.getWidthOfLine("00:00", 24) + MARGIN * 2;
 	}
+
+	@Override
+	protected void update() {
+		// TODO Auto-generated method stub
+		
+	}
 }

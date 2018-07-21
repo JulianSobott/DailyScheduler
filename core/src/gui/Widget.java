@@ -44,6 +44,9 @@ public abstract class Widget {
 		this.bounds.y = new_y;
 		this.bounds.width = new_width;
 		this.bounds.height = new_height;
+		for(Widget w : this.subWidgets) {
+			w.update();
+		}
 	}
 	
 	public float get_absolute_x() {
@@ -123,4 +126,6 @@ public abstract class Widget {
 		}
 		return new Vector2(x, y);
 	}
+	
+	protected abstract void update();
 }

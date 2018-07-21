@@ -53,4 +53,10 @@ public class Dragger extends Widget{
 	public void update_position_y(float y) {
 		((TaskField)this.parent).update_position(y);
 	}
+
+	@Override
+	protected void update() {
+		// TODO Auto-generated method stub
+		
+	}
 }

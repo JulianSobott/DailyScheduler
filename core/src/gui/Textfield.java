@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Textfield extends Label implements Clickable{
 	public boolean is_active;
-	private Cursor cursor;
+	protected Cursor cursor;
 	
 	public Textfield(Widget parent, float x, float y, float width, float height, int bounds_flags) {
 		super(parent, x, y, width, height,bounds_flags);

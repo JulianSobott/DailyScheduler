@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Align;
 
 import gui.utils.Bounds;
+import gui.utils.Padding;
 import utils.FontManager;
 
 public class Label extends Widget {
@@ -28,7 +29,7 @@ public class Label extends Widget {
 	
 	protected BitmapFont font = FontManager.getFont(24);
 	protected GlyphLayout layout = new GlyphLayout();
-	protected int padding = 5;
+	//protected int padding = 5;
 	protected final int FONT_SIZE_DP = 24;
 	protected final int LINE_SPACING = 6;
  	
@@ -67,7 +68,7 @@ public class Label extends Widget {
 				bounds_flags);
 
 		this.idx_end_character = plain_text.length();
-
+		this.style.padding = new Padding(5);
 	}
 	
 	@Override
@@ -82,7 +83,7 @@ public class Label extends Widget {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sb.begin();
 		sb.setColor(new Color(1, 0, 0, 1));
-		font.draw(sb, plain_text, get_absolute_x() + padding, get_absolute_y() + padding, idx_start_character, idx_end_character, get_absolute_width() - padding, Align.topLeft, true);
+		font.draw(sb, plain_text, get_absolute_x() + this.style.padding.left, get_absolute_y() + this.style.padding.top, idx_start_character, idx_end_character, get_absolute_width() - this.style.padding.right, Align.topLeft, true);
 		sb.end();
 		super.render(sr, sb);
 	}
@@ -143,6 +144,12 @@ public class Label extends Widget {
 		}
 		width_of_string_cache.put(line, width);
 		return width;
+	}
+
+	@Override
+	protected void update() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

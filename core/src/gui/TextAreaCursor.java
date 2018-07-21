@@ -9,25 +9,24 @@ import com.badlogic.gdx.math.Vector2;
 import gui.utils.Bounds;
 import utils.FontManager;
 
-public class Cursor extends Widget{
+public class TextAreaCursor extends Widget {
+
 	public int idx_position = 0;
 	public int idx_line = 0;
 	private final float extra_height = 3;
-	private Textfield textField;
+	private Textarea textarea;
 	
 	private float blink_time = 0.7f;
 	private long last_toggle_time = 0;
 	
 	private boolean isMultiline = false;
 	
-	public Cursor(Textfield tf) {
-		if(tf instanceof Textarea)
-			isMultiline = true;
-		this.parent = tf;
-		this.textField = tf;
+	public TextAreaCursor(Textarea ta) {
+		this.parent = ta;
+		this.textarea = ta;
 		this.bounds = new Bounds();
-		this.idx_line = Math.max(textField.all_lines.size() - 1, 0);
-		this.idx_position = Math.max(textField.all_lines.size() == 0 ? 0 : textField.all_lines.get(idx_line).length() - 1, 0);
+		this.idx_line = Math.max(textarea.all_lines.size() - 1, 0);
+		this.idx_position = Math.max(textarea.all_lines.size() == 0 ? 0 : textarea.all_lines.get(idx_line).length() - 1, 0);
 	}
 	
 	@Override
@@ -37,7 +36,7 @@ public class Cursor extends Widget{
 			this.is_hidden = !this.is_hidden;
 			last_toggle_time = System.currentTimeMillis();
 		}
-		if(!this.is_hidden && textField.is_active) {
+		if(!this.is_hidden && textarea.is_active) {
 			calc_absolute_position();
 			sr.begin(ShapeType.Filled);
 			sr.setColor(new Color(.05f, 0.01f, 1.0f, 1));
@@ -50,20 +49,16 @@ public class Cursor extends Widget{
 	private void calc_absolute_position() {
 		float margin_left = 0;
 		String curr_line = "";
-		if(this.parent instanceof Textfield) {
-			//curr_line = textField.all_lines.get(idx_line);
-		}else if(this.parent instanceof Textarea) {
-			curr_line = ((Textarea) this.parent).getLineByIdx(idx_line);
-		}
-		
+
+		curr_line = this.textarea.getLineByIdx(idx_line);
 		char[] chars = new char[curr_line.length()];
 		curr_line.getChars(0, curr_line.length(), chars, 0);
 		for(int i = 0; i < idx_position; i++) {
-			margin_left += textField.getWidthOfChar(chars[i]);
+			margin_left += textarea.getWidthOfChar(chars[i]);
 		}
-		this.bounds.x = margin_left + textField.style.padding.left;
-		this.bounds.y = idx_line * textField.getLineHeight() + textField.style.padding.top;
-		this.bounds.height = FontManager.dp_to_pixel(textField.FONT_SIZE_DP) + extra_height;
+		this.bounds.x = margin_left + textarea.style.padding.left;
+		this.bounds.y = idx_line * textarea.getLineHeight() + textarea.style.padding.top;
+		this.bounds.height = FontManager.dp_to_pixel(textarea.FONT_SIZE_DP) + extra_height;
 	}
 	
 	protected void set_indices_by_position(float x, float y) {
@@ -91,16 +86,12 @@ public class Cursor extends Widget{
 	
 	private void calcIdxPositionByX(float x, float innerX) {
 		String currentLine = "";
-		if(isMultiline) {
-			currentLine = ((Textarea)this.textField).getLineByIdx(this.idx_line);
-		}else {
-			currentLine = this.textField.formatted_text;
-		}
+		currentLine = this.textarea.getLineByIdx(this.idx_line);
 		float currCursorX = 0;
 		char[] chars = new char[currentLine.length()];
 		currentLine.getChars(0, currentLine.length(), chars, 0);
 		for(int i = 0; i < currentLine.length(); i++) {
-			currentLine += textField.getWidthOfChar(chars[i]);
+			currentLine += textarea.getWidthOfChar(chars[i]);
 			if(currCursorX < innerX)
 				this.idx_position++;
 			else
@@ -109,22 +100,17 @@ public class Cursor extends Widget{
 	}
 
 	private void calcIdxLineByY(float y, float innerY) {
-		if(!isMultiline) {
-			this.idx_line = 0;
-			return;
-		}
-			
 		if(innerY <= 0) {
 			this.idx_line = 0;
 			return;
 		}
 		if(y > innerY + get_absolute_height()) {
-			this.idx_line = ((Textarea) textField).getNumLines() - 1; 
+			this.idx_line = ((Textarea) textarea).getNumLines() - 1; 
 			return;
 		}
 		
-		this.idx_line = (int)(innerY / ((Textarea)textField).getLineHeight());
-		this.idx_line = Math.min(idx_line, ((Textarea)textField).getNumLines() - 1);
+		this.idx_line = (int)(innerY / ((Textarea)textarea).getLineHeight());
+		this.idx_line = Math.min(idx_line, ((Textarea)textarea).getNumLines() - 1);
 	}
 
 	public void move_left() {
@@ -132,18 +118,20 @@ public class Cursor extends Widget{
 		if(this.idx_position > 0)
 			this.idx_position--;
 		else {
-			move_up();
-			move_end();
+			if(this.idx_position != 0) {
+				move_up();
+				move_end();
+			}
 		}
 		
 	}
 	
 	public void move_right() {
 		this.show();
-		if(this.idx_position < this.textField.all_lines.get(this.idx_line).length()) {
+		if(this.idx_position < this.textarea.getLineByIdx(this.idx_line).length()) {
 			this.idx_position++;
 		}else {
-			if(this.idx_line < this.textField.all_lines.size() - 1) {
+			if(this.idx_line < this.textarea.getNumLines() - 1) {
 				move_down();
 				move_pos1();
 			}
@@ -156,7 +144,7 @@ public class Cursor extends Widget{
 		this.show();
 		if(this.idx_line > 0) {
 			this.idx_line--;
-			if(this.idx_position > this.textField.all_lines.get(this.idx_line).length())
+			if(this.idx_position > this.textarea.getLineByIdx(this.idx_line).length())
 				move_end();
 		}
 		else
@@ -165,9 +153,9 @@ public class Cursor extends Widget{
 
 	public void move_down() {
 		this.show();
-		if(this.idx_line < this.textField.all_lines.size() - 1) {
+		if(this.idx_line < this.textarea.getNumLines() - 1) {
 			this.idx_line++;
-			if(this.idx_position > this.textField.all_lines.get(this.idx_line).length())
+			if(this.idx_position > this.textarea.getLineByIdx(this.idx_line).length())
 				move_end();
 		}
 		else
@@ -181,7 +169,7 @@ public class Cursor extends Widget{
 	
 	public void move_end() {
 		this.show();
-		this.idx_position = this.textField.all_lines.get(this.idx_line).length();
+		this.idx_position = this.textarea.getLineByIdx(this.idx_line).length();
 	}
 	
 	
