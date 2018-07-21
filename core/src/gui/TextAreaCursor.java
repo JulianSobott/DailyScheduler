@@ -26,7 +26,7 @@ public class TextAreaCursor extends Widget {
 		this.textarea = ta;
 		this.bounds = new Bounds();
 		this.idx_line = Math.max(textarea.all_lines.size() - 1, 0);
-		this.idx_position = Math.max(textarea.all_lines.size() == 0 ? 0 : textarea.all_lines.get(idx_line).length() - 1, 0);
+		this.idx_position = Math.max(textarea.getNumLines() == 0 ? 0 : textarea.getLineByIdx(idx_line).length() - 1, 0);
 	}
 	
 	@Override
@@ -87,11 +87,12 @@ public class TextAreaCursor extends Widget {
 	private void calcIdxPositionByX(float x, float innerX) {
 		String currentLine = "";
 		currentLine = this.textarea.getLineByIdx(this.idx_line);
-		float currCursorX = 0;
+		float currCursorX = this.textarea.style.padding.left;
 		char[] chars = new char[currentLine.length()];
 		currentLine.getChars(0, currentLine.length(), chars, 0);
+		this.idx_position = 0;
 		for(int i = 0; i < currentLine.length(); i++) {
-			currentLine += textarea.getWidthOfChar(chars[i]);
+			currCursorX += textarea.getWidthOfChar(chars[i]);
 			if(currCursorX < innerX)
 				this.idx_position++;
 			else
@@ -104,7 +105,7 @@ public class TextAreaCursor extends Widget {
 			this.idx_line = 0;
 			return;
 		}
-		if(y > innerY + get_absolute_height()) {
+		if(y > innerY + this.textarea.get_absolute_height()) {
 			this.idx_line = ((Textarea) textarea).getNumLines() - 1; 
 			return;
 		}
@@ -118,7 +119,7 @@ public class TextAreaCursor extends Widget {
 		if(this.idx_position > 0)
 			this.idx_position--;
 		else {
-			if(this.idx_position != 0) {
+			if(this.idx_position != 0 || this.idx_line != 0) {
 				move_up();
 				move_end();
 			}

@@ -100,7 +100,7 @@ public class Cursor extends Widget{
 		char[] chars = new char[currentLine.length()];
 		currentLine.getChars(0, currentLine.length(), chars, 0);
 		for(int i = 0; i < currentLine.length(); i++) {
-			currentLine += textField.getWidthOfChar(chars[i]);
+			currCursorX += textField.getWidthOfChar(chars[i]);
 			if(currCursorX < innerX)
 				this.idx_position++;
 			else

@@ -60,6 +60,7 @@ public class Textarea extends Textfield {
 	
 	@Override
 	protected void update() {
+		removeAutoLineBreaks();
 		this.idx_auto_line_breaks.clear();
 		this.idx_existing_line_breaks.clear();
 		this.idx_all_line_breaks.clear();
@@ -107,8 +108,8 @@ public class Textarea extends Textfield {
 				if(currentWidth > get_absolute_width()) {
 					if(idxLastSpace == 0) {
 						if(idxChar == 0) charIsWiderThanRect = true;
-						idx_auto_line_breaks.add(Math.max(idxChar - 1, 0));
-						idxChar -= 2;
+						idx_auto_line_breaks.add(Math.max(idxChar, 0));
+						idxChar -= 1;
 					}else {
 						idx_auto_line_breaks.add(idxLastSpace + 1);
 						idxChar = idxLastSpace;
@@ -122,6 +123,13 @@ public class Textarea extends Textfield {
 		}
 	}
 	
+	private void removeAutoLineBreaks() {
+		for(int idx : this.idx_auto_line_breaks) {
+			int idxLineBreak = idx;
+			if(idxLineBreak >= 0)
+				this.formatted_text = this.formatted_text.substring(0, idxLineBreak) + this.formatted_text.substring(idxLineBreak + 1);
+		}
+	}
 	private void insertCalculatedLineBreaks() {
 		int insertedChars = 0;
 		for(int idx_line_break : idx_auto_line_breaks) {
@@ -131,10 +139,6 @@ public class Textarea extends Textfield {
 			formatted_text = formatted_text.substring(0, idx_line_break + insertedChars) + '\n' + formatted_text.substring(idx_line_break + insertedChars);
 			insertedChars++;
 		}
-	}
-	
-	private int getNumWideChars() {
-		return plain_text.length() - idx_existing_line_breaks.size();
 	}
 	
 	public int getNumLines() {
@@ -151,27 +155,27 @@ public class Textarea extends Textfield {
 		if(idx == 0)
 			return this.formatted_text.substring(0, getIdxLineEndByIdxLine(0));
 		if(idx == getNumLines() - 1)
-			return this.formatted_text.substring(this.idx_all_line_breaks.get(idx));
+			return this.formatted_text.substring(getIdxLineEndByIdxLine(idx - 1) + idx);
 		return this.formatted_text.substring(this.idx_all_line_breaks.get(idx - 1), this.idx_all_line_breaks.get(idx));
 	}
 	public void setTextByLineIdx(int idx, String text) {
 		if(idx > getNumLines() - 1 || idx < 0) return;
 		if(idx == 0) {
-			this.formatted_text = text + this.formatted_text.substring(getIdxLineEndByIdxLine(0));
+			setText(text + this.formatted_text.substring(getIdxLineEndByIdxLine(0)));
 			return;
 		}
 		if(idx == getNumLines() - 1) {
-			this.formatted_text = this.formatted_text.substring(0, this.idx_all_line_breaks.get(idx - 1)) + text;
+			setText(this.formatted_text.substring(0, this.idx_all_line_breaks.get(idx - 1) + idx) + text);
 			return;
 		}
-		this.formatted_text = 
+		setText(
 				this.formatted_text.substring(0, this.idx_all_line_breaks.get(idx - 1)) + 
 				text + 
-				this.formatted_text.substring(this.idx_all_line_breaks.get(idx));
+				this.formatted_text.substring(this.idx_all_line_breaks.get(idx)));
 	}
 	
 	private int getIdxLineEndByIdxLine(int idxLine) {
-		return this.idx_all_line_breaks.size() == 0 ? this.formatted_text.length() : this.idx_all_line_breaks.get(idxLine - 1);
+		return this.idx_all_line_breaks.size() == 0 || idxLine == getNumLines() - 1? this.formatted_text.length() : this.idx_all_line_breaks.get(idxLine);
 	}
 	
 	private void concatToAllLineBreaks() {
@@ -238,7 +242,7 @@ public class Textarea extends Textfield {
 			delete_previous_to_cursor_char();
 			break;
 		case Input.Keys.SPACE:
-			add_char_at_cursor(' ');
+			//add_char_at_cursor(' ');
 			break;
 		default:
 			break;
@@ -247,31 +251,47 @@ public class Textarea extends Textfield {
 	public void handle_char_input(char c) {
 		String all_possible_chars = "[0-9a-zA-Z~#;:?/@&!\"'´`%*=¬.,-^\\s]+";
 		if(String.valueOf(c).matches(all_possible_chars)) {
-			super.addChar(c);
-			//add_char_at_cursor(c);
+			//super.addChar(c);
+			add_char_at_cursor(c);
 		}	  
 	}
 	
 	private void delete_previous_to_cursor_char() {
-		String currLine = this.all_lines.get(this.cursor.idx_line);
+		String currLine = this.getLineByIdx(this.cursor.idx_line);
+		int linesBefore = getNumLines();
 		if(this.cursor.idx_position > 0) {
-			String new_line = currLine.substring(0, this.cursor.idx_position - 1) + currLine.substring(this.cursor.idx_position);
-			this.setTextByLineIdx(this.cursor.idx_line, new_line);
+			String newLine = "";
+			if(this.cursor.idx_position >= currLine.length())
+				newLine = currLine.substring(0, this.cursor.idx_position - 1);
+			else
+				newLine = currLine.substring(0, this.cursor.idx_position - 1) + currLine.substring(this.cursor.idx_position + 1);
+			this.setTextByLineIdx(this.cursor.idx_line, newLine);
 		}
-		this.cursor.move_left();	
+		if(linesBefore > getNumLines()) {
+			this.cursor.move_up();
+			this.cursor.move_end();
+		}else {
+			this.cursor.move_left();
+		}
+			
 		
 	}
 	
 	private void add_char_at_cursor(char c) {
 		String currLine = getLineByIdx(this.cursor.idx_line);
-		if(this.cursor.idx_position < currLine.length() - 1) {
-			String new_line = currLine.substring(0, this.cursor.idx_position ) + c +  currLine.substring(this.cursor.idx_position + 1);			
+		int numLinesBefore = getNumLines();
+		if(this.cursor.idx_position < currLine.length()) {
+			String new_line = currLine.substring(0, this.cursor.idx_position ) + c +  currLine.substring(this.cursor.idx_position);			
 			this.setTextByLineIdx(this.cursor.idx_line, new_line);
 		}else {
 			String new_line = currLine.substring(0, this.cursor.idx_position ) + c;
 			this.setTextByLineIdx(this.cursor.idx_line, new_line);
 			//super.add_new_line_text("");
 		}
-		this.cursor.move_right();
+		if(numLinesBefore < getNumLines()) {
+			this.cursor.move_down();
+			//this.cursor.move_pos1();
+		}			
+		this.cursor.move_end();
 	}
 }

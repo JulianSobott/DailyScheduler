@@ -44,9 +44,9 @@ public class TaskField extends Widget implements Clickable{
 		this.subWidgets.add(time_box_end);
 		
 		//Textfield
-		textarea = new Textarea(this, 0, 0, 1f, 1.f,
+		textarea = new Textarea(this, 0, 0, 0.1f, 1.f,
 				Bounds.relative_x | Bounds.relative_y | Bounds.relative_width | Bounds.relative_height);
-		textarea.setText("WOW");
+		//textarea.setText("WWW");
 		this.subWidgets.add(textarea);
 	}
 	

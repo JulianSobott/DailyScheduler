@@ -40,7 +40,8 @@ public class Textfield extends Label implements Clickable{
 		boolean clicked;
 		if(clicked = super.check_on_click(click_position)) {
 			is_active = true;
-			cursor.set_indices_by_position(click_position.x, click_position.y);
+			if(this.all_lines.size() > 0)
+				cursor.set_indices_by_position(click_position.x, click_position.y);
 		}
 		return clicked;
 	}
