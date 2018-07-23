@@ -51,4 +51,14 @@ public class Time {
 		int minutes = LocalDateTime.now().getMinute();;
 		return new Time(hours, minutes);
 	}
+	
+	public static int toInt(Time t) {
+		return t.hour * 60 + t.minute;
+	}
+	
+	public static Time intToTime(int i) {
+		int hour = i / 60;
+		int minute = i % 60;
+		return new Time(hour, minute);
+	}
 }
