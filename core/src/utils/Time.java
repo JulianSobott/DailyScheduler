@@ -1,5 +1,7 @@
 package utils;
 
+import java.time.LocalDateTime;
+
 public class Time {
 	public int hour;
 	public int minute;
@@ -44,13 +46,9 @@ public class Time {
 		this.hour = hour;
 	}
 	
-	public static int toInt(Time t) {
-		return t.hour * 60 + t.minute;
-	}
-	
-	public static Time intToTime(int i) {
-		int hour = i / 60;
-		int minute = i % 60;
-		return new Time(hour, minute);
+	public static Time getCurrentTime() {
+		int hours = LocalDateTime.now().getHour();
+		int minutes = LocalDateTime.now().getMinute();;
+		return new Time(hours, minutes);
 	}
 }

@@ -14,6 +14,7 @@ public class DesktopLauncher {
 		config.width = 600;
 		config.height = 800;
 		config.samples = 8;
+		config.foregroundFPS = 60;
 		new LwjglApplication(new Main(Main.DeviceMode.DESKTOP), config);
 	}
 }

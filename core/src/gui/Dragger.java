@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
+import gui.utils.Bounds;
+
 public class Dragger extends Widget{
 	private final float WIDTH = 50;
 	private final float HEIGHT = 20;
@@ -16,11 +18,7 @@ public class Dragger extends Widget{
 	
 	public Dragger(Widget parent, float x, float y) {
 		this.parent = parent;
-		this.position = Position.relative_relative;
-		this.x = x;
-		this.y = y;
-		this.width = WIDTH;
-		this.height = HEIGHT;
+		this.bounds = new Bounds(x, y, WIDTH, HEIGHT, Bounds.relative_x | Bounds.relative_y);
 		this.centered_x = true;
 		this.centered_y = true;
 	}
@@ -35,7 +33,7 @@ public class Dragger extends Widget{
 				sr.setColor(new Color(0.5f, 0.7f, 0.5f, 1f));
 			else
 				sr.setColor(new Color(0.5f, 0.5f, 0.5f, 0.8f));
-			if(position == Position.relative_relative) {
+			if(this.bounds.isRelative(Bounds.relative_x | Bounds.relative_y)) {
 				sr.rect(get_absolute_x(), get_absolute_y(), WIDTH, HEIGHT);
 			}
 			sr.end();
@@ -54,5 +52,11 @@ public class Dragger extends Widget{
 	
 	public void update_position_y(float y) {
 		((TaskField)this.parent).update_position(y);
+	}
+
+	@Override
+	protected void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }
