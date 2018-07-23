@@ -1,27 +1,29 @@
 package utils;
 
+import java.time.LocalDateTime;
+
 public class Time {
 	public int hour;
 	public int minute;
-	
+
 	public Time(int hour, int minute){
 		this.hour = hour;
 		this.minute = minute;
 	}
-	
+
 	public Time(int hour) {
 		this(hour, 0);
 	}
-	
+
 	public Time(Time t) {
 		this.hour = t.hour;
 		this.minute = t.minute;
 	}
-	
+
 	public String toString() {
 		return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : int_to_2decimals(minute));
 	}
-	
+
 	private int int_to_2decimals(int i) {
 		int new_int = i;
 		while(new_int >= 100) {
@@ -43,14 +45,20 @@ public class Time {
 		this.minute = min_end;
 		this.hour = hour;
 	}
-	
+
 	public static int toInt(Time t) {
 		return t.hour * 60 + t.minute;
 	}
-	
+
 	public static Time intToTime(int i) {
 		int hour = i / 60;
 		int minute = i % 60;
 		return new Time(hour, minute);
+	}
+	
+	public static Time getCurrentTime() {
+		int hours = LocalDateTime.now().getHour();
+		int minutes = LocalDateTime.now().getMinute();;
+		return new Time(hours, minutes);
 	}
 }
