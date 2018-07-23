@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,37 +23,34 @@ public class Main extends ApplicationAdapter {
 		DESKTOP, MOBILE
 	}
 	DeviceMode deviceMode;
-
+	
 	SpriteBatch sb;
 	ShapeRenderer sr;
 	OrthographicCamera cam;
 	Texture img;
 	MainScreen mainScreen;
-
+	
 	//data
 	public DataHandler dataHandler;
-	private FPSLogger fpsLogger;
-
-
+	
 	public Main(DeviceMode deviceMode) {
 		this.deviceMode = deviceMode;
-		this.fpsLogger = new FPSLogger();
 	}
-
+	
 	@Override
 	public void create () {
 		dataHandler = new DataHandler();
 		//dataHandler.addNewTask(new Task());
 		//dataHandler.save();
 		dataHandler.load();
-
+		
 		sb = new SpriteBatch();
 		sr = new ShapeRenderer();
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+		
 		mainScreen = new MainScreen();
-
+		
 		// event handling
 				InputMultiplexer multiplexer = new InputMultiplexer();
 				multiplexer.addProcessor(mainScreen);
@@ -64,13 +60,13 @@ public class Main extends ApplicationAdapter {
 						@Override
 						public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 							return false;
-
+							
 						}
 
 						@Override
 						public boolean touchDragged(int screenX, int screenY, int pointer) {
 							return false;
-
+							
 						}
 
 						@Override
@@ -89,7 +85,7 @@ public class Main extends ApplicationAdapter {
 
 						@Override
 						public boolean zoom(float initialDistance, float distance) {
-
+						
 							return true;
 						}
 
@@ -101,24 +97,23 @@ public class Main extends ApplicationAdapter {
 
 						@Override
 						public boolean pan(float x, float y, float deltaX, float deltaY) {
-
+							
 							return true;
 						}
 					}));
 				Gdx.input.setInputProcessor(multiplexer);
-
+				
 	}
 
 	@Override
 	public void render () {
-		//this.fpsLogger.log();
 		Gdx.gl.glClearColor(0.4f, 0.5f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		sr.setProjectionMatrix(cam.combined);
 		sb.setProjectionMatrix(cam.combined);
 		mainScreen.render(sr, sb);
 	}
-
+	
 	@Override
 	public void dispose () {
 		sb.dispose();
