@@ -1,120 +1,173 @@
 package gui;
 
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
-public class Textfield extends Label implements Clickable{
-	public boolean is_active;
-	protected Cursor cursor;
+import utils.FontManager;
+
+public class Textfield extends Widget {
+
+	private String plain_text = "";
+	private String formatted_text = "";
+	private List<String> all_lines = new ArrayList<String>();
 	
-	public Textfield(Widget parent, float x, float y, float width, float height, int bounds_flags) {
-		super(parent, x, y, width, height,bounds_flags);
-		init();
+	private BitmapFont font = FontManager.getFont(24);
+	private GlyphLayout layout = new GlyphLayout();
+	private int padding = 5;
+	private final int FONT_SIZE_DP = 24;
+	private final int LINE_SPACING = 6;
+ 	
+	public boolean auto_line_break = false;
+	public boolean is_in_one_line = false;
+	
+	private int idx_start_character = 0;
+	private int idx_end_character = 0;
+	
+	/**
+	 * 
+	 * @param parent
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height if 0 size is set to line_height 
+	 * @param position
+	 */
+	public Textfield(Widget parent, float x, float y, float width, float height, Position position) {
+		super(parent);
+		init(x, y, width, height, position);
 	}
 
 	public Textfield() {
-		super();
-		init();
+		init(0, 0, 100, 0, Position.absolute_absolute);
 	}
-	
-	private void init() {
-		this.is_active = true;
-		this.cursor = new Cursor(this);
-		this.subWidgets.add(cursor);
+
+	private void init(float x, float y, float width, float height, Position position) {
+		this.position = position;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = Math.max(FontManager.dp_to_pixel(FONT_SIZE_DP), height);
+		setText("WOW WOW WOWO\n WOg");
+		this.idx_end_character = plain_text.length();
+		fitTextToField();
 	}
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
-		super.render(sr, sb);
-
-	}
-	
-	@Override
-	public boolean check_on_click(Vector2 click_position) {
-		boolean clicked;
-		if(clicked = super.check_on_click(click_position)) {
-			is_active = true;
-			if(this.all_lines.size() > 0)
-				cursor.set_indices_by_position(click_position.x, click_position.y);
-		}
-		return clicked;
-	}
-
-	@Override
-	public void activate() {
-		this.is_active = true;
-	}
-
-	@Override
-	public void deactivate() {
-		this.is_active = false;
-	}
-	
-	
-	public void handle_key_input(int key_code) {
-		switch (key_code) {
-		case Input.Keys.LEFT:
-			cursor.move_left();
-			break;
-		case Input.Keys.UP:
-			cursor.move_up();
-			break;
-		case Input.Keys.RIGHT:
-			cursor.move_right();
-			break;
-		case Input.Keys.DOWN:
-			cursor.move_down();
-			break;
-		case Input.Keys.END:
-			cursor.move_end();
-			break;
-		case Input.Buttons.BACK:
-			cursor.move_pos1();
-			break;
-		case Input.Keys.BACKSPACE:
-			delete_previous_to_cursor_char();
-			break;
-		case Input.Keys.SPACE:
-			add_char_at_cursor(' ');
-			break;
-		default:
-			break;
-		}
-	}
-	public void handle_char_input(char c) {
-		String all_possible_chars = "[0-9a-zA-Z~#;:?/@&!\"'´`%*=¬.,-^\\s]+";
-		if(String.valueOf(c).matches(all_possible_chars)) {
-			super.addChar(c);
-			//add_char_at_cursor(c);
-		}	  
-	}
-	
-	private void delete_previous_to_cursor_char() {
-		String currLine = this.all_lines.get(this.cursor.idx_line);
-		if(this.cursor.idx_position > 0) {
-			String new_line = currLine.substring(0, this.cursor.idx_position - 1) + currLine.substring(this.cursor.idx_position);
-			this.all_lines.set(this.cursor.idx_line, new_line);
-		}
-		this.cursor.move_left();	
 		
+		sr.begin(ShapeType.Filled);
+		sr.rect(get_absolute_x(), get_absolute_y(), this.width, this.height);
+		sr.end();
+		
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		sb.begin();
+		sb.setColor(new Color(1, 0, 0, 0));
+		int idx_line = 0;
+		if(all_lines.size() == 1)
+			font.draw(sb, plain_text, get_absolute_x() + this.padding, get_absolute_y() + this.padding, idx_start_character, idx_end_character, this.width, Align.right, false);
+		else {
+			for(String str : all_lines) {
+				font.draw(sb, str, get_absolute_x() + this.padding, get_absolute_y() + this.padding + idx_line * (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING));
+				idx_line++;
+				if(font.getLineHeight() * idx_line > this.height) {
+					break;
+				}
+			}
+		}
+		
+		
+		sb.end();
+		super.render(sr, sb);
 	}
 	
-	private void add_char_at_cursor(char c) {
-		String currLine = this.all_lines.get(this.cursor.idx_line);
-		if(this.cursor.idx_position < currLine.length() - 1) {
-			String new_line = currLine.substring(0, this.cursor.idx_position ) + c +  currLine.substring(this.cursor.idx_position + 1);
-			this.all_lines.set(this.cursor.idx_line, new_line);
+	private void fitTextToField() {
+		if(auto_line_break || !is_in_one_line) {
+			formatted_text = plain_text;
+			layout.setText(font, all_lines.get(all_lines.size() - 1));
+			int idx_last_new_line = 0;
+			int idx_line = 0;
+			while(layout.width > this.width && idx_last_new_line != -1 || idx_line < all_lines.size() - 1) { 
+				idx_last_new_line = addNewLine(idx_last_new_line, this.width, idx_line);
+				layout.setText(font, all_lines.get(all_lines.size() - 1));
+				idx_line++;
+			}			
 		}else {
-			String new_line = currLine.substring(0, this.cursor.idx_position ) + c;
-			this.all_lines.set(this.cursor.idx_line, new_line);
-			//super.add_new_line_text("");
+			int max_characters_per_line = (int)(this.width/getWidthOfChar());
+			idx_start_character = Math.max(plain_text.length() - max_characters_per_line , 0);
+			idx_end_character = plain_text.length();
 		}
-		this.cursor.move_right();
+	}
+	
+	private void fitFieldToText() {
+		this.height = (FontManager.dp_to_pixel(FONT_SIZE_DP) + LINE_SPACING) * all_lines.size() + 2 * padding;
+		for(String str : all_lines) {
+			if(str.length() * getWidthOfChar() > this.width)
+				this.width = str.length() * getWidthOfChar();
+		}
+	}
+	
+	private int addNewLine(int idx_last_new_line, float max_width, int idx_line) {	
+		int currentLineWidth = 0;
+		int idx_possible_new_line = 0;
+		int idx_char = 0;
+		String curr_line = all_lines.get(idx_line);
+		char[] chars = new char[curr_line.length()];
+		
+		curr_line.getChars(0, curr_line.length(), chars, 0);
+		for(char c : chars) {
+			if(c == ' ') {
+				idx_possible_new_line = idx_char;
+			}
+			idx_char++;
+			currentLineWidth += getWidthOfChar();
+			if(currentLineWidth > max_width) {
+				all_lines.set(idx_line,  curr_line.substring(0, idx_possible_new_line));
+				all_lines.add(idx_line + 1, curr_line.substring(idx_possible_new_line + 1));
+				formatted_text = formatted_text.substring(idx_last_new_line, idx_possible_new_line) + '\n' + formatted_text.substring(idx_possible_new_line + 1);
+				idx_last_new_line = idx_possible_new_line;
+				return idx_last_new_line;
+			}
+		}
+		return -1;
+	}
+
+	private float getWidthOfChar() {
+		layout.setText(font, "C");
+		return layout.width;
+	}
+	
+	private void setText(String plainText) {
+		this.plain_text = plainText;
+		all_lines.add(plainText);
+		if(auto_line_break || !is_in_one_line) {
+			int idx;
+			this.formatted_text = new String(plainText);
+			while((idx = formatted_text.indexOf('\n')) != -1) {
+				all_lines.set(all_lines.size() - 1,  formatted_text.substring(0, idx));
+				formatted_text = formatted_text.substring(idx + 1);
+				all_lines.add(formatted_text);
+			}
+			fitTextToField();
+		}
+	}
+	
+	@Override
+	public void adjustBounds() {
+		if(this.position == Position.relative_relative) {
+			
+		}
+		super.adjustBounds();
 	}
 }

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,6 +12,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+
+import datahandling.Data;
+import datahandling.DataHandler;
+import datahandling.ServerCommunicator;
+import datahandling.Task;
 
 public class Main extends ApplicationAdapter {
 	public enum DeviceMode {
@@ -26,15 +30,20 @@ public class Main extends ApplicationAdapter {
 	Texture img;
 	MainScreen mainScreen;
 	
-	private FPSLogger fpsLogger;
+	//data
+	public DataHandler dataHandler;
 	
 	public Main(DeviceMode deviceMode) {
 		this.deviceMode = deviceMode;
-		this.fpsLogger = new FPSLogger();
 	}
 	
 	@Override
 	public void create () {
+		dataHandler = new DataHandler();
+		//dataHandler.addNewTask(new Task());
+		//dataHandler.save();
+		dataHandler.load();
+		
 		sb = new SpriteBatch();
 		sr = new ShapeRenderer();
 		cam = new OrthographicCamera();
@@ -98,7 +107,6 @@ public class Main extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		//this.fpsLogger.log();
 		Gdx.gl.glClearColor(0.4f, 0.5f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		sr.setProjectionMatrix(cam.combined);
