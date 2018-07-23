@@ -41,7 +41,7 @@ public class Main extends ApplicationAdapter {
 	public void create () {
 		dataHandler = new DataHandler();
 		//dataHandler.addNewTask(new Task());
-		//dataHandler.save();
+		dataHandler.save();
 		dataHandler.load();
 		
 		sb = new SpriteBatch();

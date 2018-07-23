@@ -115,6 +115,9 @@ public class DataHandler {
 		if(idx_endLine == -1)
 			return 0;
 		String line = t_data.substring(0, idx_endLine);
+		line = line.replace("\r", "");
+		line = line.replace("\n", "");
+		
 		return Integer.parseInt(line);
 	}
 	
