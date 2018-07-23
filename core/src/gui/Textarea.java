@@ -249,7 +249,7 @@ public class Textarea extends Textfield {
 		}
 	}
 	public void handle_char_input(char c) {
-		String all_possible_chars = "[0-9a-zA-Z~#;:?/@&!\"'´`%*=¬.,-^\\s]+";
+		String all_possible_chars = "[0-9a-zA-ZüÜöÖäÄ~#;:?/@&!\"'´`%*=¬.,-^\\s]+";
 		if(String.valueOf(c).matches(all_possible_chars)) {
 			//super.addChar(c);
 			add_char_at_cursor(c);
