@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler;
+package main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,23 +9,25 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.dailyscheduler.dailyscheduler.gui.Scene;
-import com.dailyscheduler.dailyscheduler.gui.TaskField;
-import com.dailyscheduler.dailyscheduler.gui.Timeline;
-import com.dailyscheduler.dailyscheduler.gui.Widget;
+
+import debug.Profiler;
+import gui.Label;
+import gui.Scene;
+import gui.TaskField;
+import gui.Textarea;
+import gui.Timeline;
+import gui.Widget;
 
 public class MainScreen extends Scene implements InputProcessor{
 	private Vector2 touchStart;
-	private Vector2 touchCurrent;
 	private int idx_active_task_field;
 	
 	public Timeline timeline = new Timeline();
 	public List<TaskField> taskFields = new ArrayList<TaskField>();
 	
-	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
-		
+
 		super.render(sr, sb);
 		timeline.render(sr, sb);
 		for(TaskField taskField : taskFields) {
@@ -35,7 +37,10 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+		if(taskFields.size() > 0) {
+			taskFields.get(this.idx_active_task_field).handle_key_input(keycode);
+		}
+		
 		return false;
 	}
 
@@ -47,14 +52,17 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
+		if(taskFields.size() > 0) {
+			taskFields.get(this.idx_active_task_field).handle_char_input(character);
+		}
+		
+		return true;
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {		
 		for(TaskField tf : taskFields) {
-			tf.is_active = false;
+			tf.deactivate(); 
 		}
 		for(Widget widget : subWidgets) {
 			if(widget.check_on_click(new Vector2(screenX, screenY))) {
@@ -69,15 +77,14 @@ public class MainScreen extends Scene implements InputProcessor{
 				return true;
 			}
 		}
-		
+
 		touchStart = new Vector2(screenX, screenY);
-		touchCurrent = touchStart;
 		TaskField taskField = new TaskField(timeline);
+
 		taskField.set_start(screenY);
 		taskFields.add(taskField);
 		this.subWidgets.add(taskField);
 		idx_active_task_field = taskFields.size() - 1;
-		
 		return false;
 	}
 
@@ -89,9 +96,8 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		touchCurrent = new Vector2(screenX, screenY);
 		taskFields.get(idx_active_task_field).update_position(screenY);
-		return false;
+		return true;
 	}
 
 	@Override
@@ -104,5 +110,11 @@ public class MainScreen extends Scene implements InputProcessor{
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }

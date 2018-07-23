@@ -1,4 +1,4 @@
-package com.dailyscheduler.dailyscheduler.utils;
+package utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

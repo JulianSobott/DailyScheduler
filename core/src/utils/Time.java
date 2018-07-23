@@ -1,4 +1,6 @@
-package com.dailyscheduler.dailyscheduler.utils;
+package utils;
+
+import java.time.LocalDateTime;
 
 public class Time {
 	public int hour;
@@ -42,5 +44,11 @@ public class Time {
 		hour += this.hour - time.hour - 1;
 		this.minute = min_end;
 		this.hour = hour;
+	}
+	
+	public static Time getCurrentTime() {
+		int hours = LocalDateTime.now().getHour();
+		int minutes = LocalDateTime.now().getMinute();;
+		return new Time(hours, minutes);
 	}
 }
