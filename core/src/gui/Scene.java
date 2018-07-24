@@ -4,8 +4,16 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public abstract class Scene extends Widget implements InputProcessor{
+import datahandling.DataHandler;
 
+public abstract class Scene extends Widget implements InputProcessor{
+	
+	public DataHandler dataHandler;
+	
+	public Scene(DataHandler dataHandler) {
+		this.dataHandler = dataHandler;
+	}
+	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
 		
@@ -57,6 +65,10 @@ public abstract class Scene extends Widget implements InputProcessor{
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public void saveRequest() {
+		this.dataHandler.save();
 	}
 
 }

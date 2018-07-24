@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 
+import datahandling.DataHandler;
+
 public class Main extends ApplicationAdapter {
 	public enum DeviceMode {
 		DESKTOP, MOBILE
@@ -27,10 +29,12 @@ public class Main extends ApplicationAdapter {
 	MainScreen mainScreen;
 	
 	private FPSLogger fpsLogger;
+	private DataHandler dataHandler;
 	
 	public Main(DeviceMode deviceMode) {
 		this.deviceMode = deviceMode;
 		this.fpsLogger = new FPSLogger();
+		this.dataHandler = new DataHandler();
 	}
 	
 	@Override
@@ -40,7 +44,7 @@ public class Main extends ApplicationAdapter {
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-		mainScreen = new MainScreen();
+		mainScreen = new MainScreen(this.dataHandler);
 		
 		// event handling
 				InputMultiplexer multiplexer = new InputMultiplexer();

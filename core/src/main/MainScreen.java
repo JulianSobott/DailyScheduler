@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import datahandling.DataHandler;
 import debug.Profiler;
 import gui.Label;
 import gui.Scene;
@@ -19,6 +20,11 @@ import gui.Timeline;
 import gui.Widget;
 
 public class MainScreen extends Scene implements InputProcessor{
+	
+	public MainScreen(DataHandler dataHandler) {
+		super(dataHandler);
+	}
+
 	private Vector2 touchStart;
 	private int idx_active_task_field;
 	
@@ -55,7 +61,6 @@ public class MainScreen extends Scene implements InputProcessor{
 		if(taskFields.size() > 0) {
 			taskFields.get(this.idx_active_task_field).handle_char_input(character);
 		}
-		
 		return true;
 	}
 
@@ -79,12 +84,14 @@ public class MainScreen extends Scene implements InputProcessor{
 		}
 
 		touchStart = new Vector2(screenX, screenY);
-		TaskField taskField = new TaskField(timeline);
-
+		TaskField taskField = new TaskField(this, timeline);
+		
 		taskField.set_start(screenY);
 		taskFields.add(taskField);
 		this.subWidgets.add(taskField);
 		idx_active_task_field = taskFields.size() - 1;
+		
+		addedNewWidgetForSaving(taskField);
 		return false;
 	}
 
@@ -116,5 +123,12 @@ public class MainScreen extends Scene implements InputProcessor{
 	protected void update() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void addedNewWidgetForSaving(Widget w) {
+		if(w instanceof TaskField) {
+			this.dataHandler.addNewTask(((TaskField)w).task);
+		}
+		this.saveRequest();
 	}
 }

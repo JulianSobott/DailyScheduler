@@ -3,8 +3,8 @@ package utils;
 import java.time.LocalDateTime;
 
 public class Time {
-	public int hour;
-	public int minute;
+	public int hour = 0;
+	public int minute = 0;
 	
 	public Time(int hour, int minute){
 		this.hour = hour;

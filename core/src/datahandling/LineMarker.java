@@ -4,6 +4,7 @@ package datahandling;
 public enum LineMarker {
 	save_time,
 	task_header,
+	daily_task_id,
 	start,
 	end,
 	body,
@@ -13,7 +14,8 @@ public enum LineMarker {
 	
 	public LineMarker next() {
 		switch(this) {
-		case save_time: return task_header;
+		case save_time: return daily_task_id;
+		case daily_task_id: return task_header;
 		case task_header: return start;
 		case start: return end;
 		case end: return body;

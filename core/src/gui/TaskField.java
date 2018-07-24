@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
+import datahandling.Task;
 import debug.Profiler;
 import gui.utils.Bounds;
 import utils.Time;
@@ -16,16 +17,21 @@ public class TaskField extends Widget implements Clickable{
 	private Dragger draggerTop, draggerBot;
 	private TimeBox time_box_start, time_box_duration, time_box_end; 
 	private Textarea textarea;
+	private Scene parentScene;
 	public boolean is_active = false;
 	
 	private Timeline timeLine;
 	
-	public TaskField(Timeline timeLine) {
+	public Task task;
+	
+	public TaskField(Scene scene, Timeline timeLine) {
 		//this
 		this.timeLine = timeLine;
 		float limeline_width_leftColumn = timeLine.get_width_of_left_column();
 		this.bounds = new Bounds(limeline_width_leftColumn, 0, Gdx.graphics.getWidth() - limeline_width_leftColumn * 2, 0, 0);
 		is_active = true;
+		this.parent = scene;
+		this.parentScene = scene;
 		
 		//DRAGGER
 		draggerTop = new Dragger(this, 0.5f, 0);
@@ -46,8 +52,12 @@ public class TaskField extends Widget implements Clickable{
 		//Textfield
 		textarea = new Textarea(this, 0, 0, 1f, 1.f,
 				Bounds.relative_x | Bounds.relative_y | Bounds.relative_width | Bounds.relative_height);
-		//textarea.setText("WWW");
 		this.subWidgets.add(textarea);
+		
+		//Task
+		this.task = new Task();
+		
+		this.update();
 	}
 	
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
@@ -78,7 +88,7 @@ public class TaskField extends Widget implements Clickable{
 		else if(draggerBot.is_active) {
 			adjustHeight(touchY - this.bounds.y);
 		}
-		
+		update();
 	}
 	
 	public void set_start(float y) {
@@ -109,9 +119,11 @@ public class TaskField extends Widget implements Clickable{
 
 	public void handle_key_input(int key_code) {
 		this.textarea.handle_key_input(key_code);
+		update();
 	}
 	public void handle_char_input(char c) {
 		this.textarea.handle_char_input(c);
+		update();
 	}
 
 	@Override
@@ -154,7 +166,9 @@ public class TaskField extends Widget implements Clickable{
 
 	@Override
 	protected void update() {
-		
+		this.task.start = this.time_box_start.time;
+		this.task.end = this.time_box_end.time;
+		this.task.body = this.textarea.formatted_text;
+		this.parentScene.saveRequest();
 	}
-	
 }
