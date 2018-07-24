@@ -3,13 +3,14 @@ package datahandling.http;
 public class Response {
 
 	public String message;
-	public String status;
+	public Status status;
 	
 	public Response() {
 		
 	}
 	
-	public Response(String message) {
+	public Response(Status s, String message) {
+		this.status = s;
 		this.message = message;
 	}
 

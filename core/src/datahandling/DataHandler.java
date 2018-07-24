@@ -1,13 +1,19 @@
 package datahandling;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 import datahandling.http.PostAction;
 import datahandling.http.Response;
+import datahandling.http.Status;
+import debug.Profiler;
 import utils.Time;
 
-public class DataHandler {
+public class DataHandler extends Thread{
 	private final String FILE_PATH = "assets/save_file.txt";
 	private ServerCommunicator serverCommunicator;
 	private Data data;
@@ -17,19 +23,52 @@ public class DataHandler {
 	
 	private LineMarker currentLinemarker = LineMarker.task_header;
 	
+	private List<Request> requests = new LinkedList<Request>();
+	
 	public DataHandler() {
 		this.data = new Data();
 		
 		serverCommunicator = new ServerCommunicator();
 	}
-
-	public void save() {
-		dataString = createDataString();
-		saveLocal();
-		saveOnline();		
+	
+	public void run() {
+		while(true) {
+			if(requests.size() > 0) {
+				Request nextRequest = requests.get(0);
+				switch(nextRequest) {
+				case save:
+					save();
+					break;
+				case load:
+					load();
+					break;
+				}
+				requests.remove(0);
+			}else {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
-	public void load() {
+	private void save() {
+		//TODO inform user with symbols
+		dataString = createDataString();
+		boolean savedLocal = saveLocal();
+		if(savedLocal)
+			System.out.print("Successfully saved Local  "); 
+		boolean savedOnline = saveOnline();
+		if(savedOnline)
+			System.out.println("--- Successfully saved online");
+		if(!savedLocal && !savedOnline)
+			System.err.println("ERROR: Failed to save");
+	}
+
+	private void load() {
 		data.all_tasks.clear();
 		int online_time;
 		if(getLocalTime() > (online_time = getOnlineTime())) {
@@ -58,13 +97,22 @@ public class DataHandler {
 		this.data.all_tasks.add(t);
 	}
 	
-	private void saveLocal() {
+	private boolean saveLocal() {
 		FileHandle file = Gdx.files.local(FILE_PATH);
+		if(!file.exists())
+			return false;
 		file.writeString(dataString, false);
+		return true;
 	}
 	
-	private void saveOnline() {
+	private boolean saveOnline() {
 		Response response = serverCommunicator.post(PostAction.save, dataString);
+		if(response.status == Status.successfully) {
+			return true;
+		}else {
+			System.err.println("ERROR: Saving file online! \n" + response.status + "--" + response.message + "\n");
+			return false;
+		}
 	}
 	
 	private void loadLocal() {
@@ -124,5 +172,15 @@ public class DataHandler {
 	private int getOnlineTime() {
 		//TODO implement
 		return 0;
+	}
+	
+	public void addRequest(Request r) {
+		if(requests.size() > 1) {
+			if(requests.get(requests.size() - 2) != r){
+				requests.add(r);
+			}
+		}else {
+			requests.add(r);
+		}
 	}
 }

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import datahandling.DataHandler;
+import datahandling.Request;
+import debug.Profiler;
 
 public abstract class Scene extends Widget implements InputProcessor{
 	
@@ -68,7 +70,7 @@ public abstract class Scene extends Widget implements InputProcessor{
 	}
 	
 	public void saveRequest() {
-		this.dataHandler.save();
+		this.dataHandler.addRequest(Request.save);
 	}
 
 }

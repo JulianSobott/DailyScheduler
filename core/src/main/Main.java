@@ -35,6 +35,7 @@ public class Main extends ApplicationAdapter {
 		this.deviceMode = deviceMode;
 		this.fpsLogger = new FPSLogger();
 		this.dataHandler = new DataHandler();
+		this.dataHandler.start();
 	}
 	
 	@Override

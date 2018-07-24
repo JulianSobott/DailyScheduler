@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 
 import datahandling.http.PostAction;
 import datahandling.http.Response;
+import datahandling.http.Status;
 
 public class ServerCommunicator {
 	
@@ -52,11 +53,16 @@ public class ServerCommunicator {
 			response = client.execute(post);	
 			entity = response.getEntity();			
 			t_resp.message = EntityUtils.toString(response.getEntity());
-			t_resp.status = response.getStatusLine().toString();
+			if( response.getStatusLine().toString() != "500") {
+				t_resp.status = Status.successfully;
+			}
+			else {
+				t_resp.status = Status.failed;
+			}
 		} catch (ClientProtocolException e) { 
-			e.printStackTrace();
+			t_resp.status = Status.server_offline;
 		} catch (IOException e) {
-			e.printStackTrace();
+			t_resp.status = Status.server_offline;
 		}
 		return t_resp;
 	}
