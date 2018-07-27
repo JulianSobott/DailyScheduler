@@ -13,7 +13,7 @@ import gui.utils.Style;
 
 public abstract class Widget {
 	
-	protected Bounds bounds = new Bounds();
+	public Bounds bounds = new Bounds();
 	protected boolean centered_x = false; //Origin of widget is in center or at top_left corner
 	protected boolean centered_y = false; //Origin of widget is in center or at top_left corner
 	protected boolean is_hidden = false;
@@ -36,7 +36,17 @@ public abstract class Widget {
 	}
 	
 	public void adjustHeight(float new_height) {
-		adjustBounds(this.bounds.x, this.bounds.y, this.bounds.width, new_height);
+		if(new_height < 0) {
+			adjustBounds(this.bounds.x, this.bounds.y + new_height, this.bounds.width, new_height * -1);
+		}else {
+			adjustBounds(this.bounds.x, this.bounds.y, this.bounds.width, new_height);
+		}
+		
+	}
+	
+	public void adjustYPosition(float new_y) {
+		adjustHeight(this.bounds.height + this.bounds.y - new_y);
+		adjustBounds(this.bounds.x, new_y, this.bounds.width, this.bounds.height);
 	}
 	
 	public void adjustBounds(float new_x, float new_y, float new_width, float new_height) {
@@ -99,6 +109,14 @@ public abstract class Widget {
 		}
 	}
 	
+	public Bounds get_absolute_bounds() {
+		return new Bounds(
+				get_absolute_x(),
+				get_absolute_y(),
+				get_absolute_width(),
+				get_absolute_height(), 
+				0);
+	}
 	public void hide() {
 		this.is_hidden = true;
 	}

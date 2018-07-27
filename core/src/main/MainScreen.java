@@ -18,6 +18,7 @@ import gui.TaskField;
 import gui.Textarea;
 import gui.Timeline;
 import gui.Widget;
+import gui.utils.Bounds;
 
 public class MainScreen extends Scene implements InputProcessor{
 	
@@ -97,13 +98,24 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		this.saveRequest();
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		taskFields.get(idx_active_task_field).update_position(screenY);
+		boolean overlaps = false;
+		TaskField active_tf = this.taskFields.get(this.idx_active_task_field);
+		Bounds previousBounds = new Bounds(active_tf.bounds);
+		active_tf.update_position(screenY);			
+		for(TaskField tf : taskFields) {
+			if(!tf.is_active) {
+				if(Bounds.overlap(tf.get_absolute_bounds(), active_tf.get_absolute_bounds()))
+					overlaps = true;
+			}	
+		}
+		if(overlaps) {
+			active_tf.bounds = previousBounds;	
+		}
 		return true;
 	}
 

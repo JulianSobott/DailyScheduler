@@ -83,7 +83,7 @@ public class TaskField extends Widget implements Clickable{
 	
 	public void update_position(float touchY) {
 		if(draggerTop.is_active) {
-			adjustBounds(this.bounds.x, touchY, this.bounds.width, this.bounds.height + this.bounds.y - touchY);
+			adjustYPosition(touchY);
 		}
 		else if(draggerBot.is_active) {
 			adjustHeight(touchY - this.bounds.y);

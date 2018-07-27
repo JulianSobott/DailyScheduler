@@ -39,6 +39,10 @@ public class Bounds{
 		this.flags = flags;
 	}
 	
+	public Bounds(Bounds b) {
+		this(b.x, b.y, b.width, b.height, b.flags);
+	}
+	
 	public boolean isRelative(int searched_position) {
 		if((this.flags & searched_position) == searched_position) {
 			return true;
@@ -61,14 +65,38 @@ public class Bounds{
 		return false;
 	}
 	
-	public boolean is_position_inside(Vector2 pos, Widget corresponding_widget) {
-		if(		corresponding_widget.get_absolute_x() <= pos.x &&
-				corresponding_widget.get_absolute_x() + corresponding_widget.get_absolute_width() >= pos.x &&
-				corresponding_widget.get_absolute_y() <= pos.y &&
-				corresponding_widget.get_absolute_y() + corresponding_widget.get_absolute_height() >= pos.y)
+	public static boolean is_position_inside(Vector2 abs_pos, Widget corresponding_widget) {
+		if(		corresponding_widget.get_absolute_x() <= abs_pos.x &&
+				corresponding_widget.get_absolute_x() + corresponding_widget.get_absolute_width() >= abs_pos.x &&
+				corresponding_widget.get_absolute_y() <= abs_pos.y &&
+				corresponding_widget.get_absolute_y() + corresponding_widget.get_absolute_height() >= abs_pos.y)
 					return true;
 		else
 			return false;
+	}
+	
+	public static boolean is_position_inside(Vector2 abs_pos, Bounds abs_bounds) {
+		if(		abs_bounds.x <= abs_pos.x &&
+				abs_bounds.x + abs_bounds.width >= abs_pos.x &&
+				abs_bounds.y <= abs_pos.y &&
+				abs_bounds.y + abs_bounds.height >= abs_pos.y)
+					return true;
+		else
+			return false;
+	}
+	
+	public static boolean overlap(Bounds abs_b1, Bounds abs_b2) {
+		Vector2 p1_top_left = new Vector2(abs_b1.x, abs_b1.y);
+		Vector2 p1_bot_right = new Vector2(abs_b1.x + abs_b1.width, abs_b1.y + abs_b1.height);
+		Vector2 p2_top_left = new Vector2(abs_b2.x, abs_b2.y);
+		Vector2 p2_bot_right = new Vector2(abs_b2.x + abs_b2.width, abs_b2.y + abs_b2.height);
+		
+		if(p1_top_left.x > p2_bot_right.x || p2_top_left.x > p1_bot_right.x)
+			return false;
+		if(p1_top_left.y > p2_bot_right.y || p2_top_left.y > p1_bot_right.y)
+			return false;
+		
+		return true;
 	}
 	
 }
