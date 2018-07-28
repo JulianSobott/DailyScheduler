@@ -18,6 +18,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 
 import datahandling.DataHandler;
+import datahandling.Request;
 import utils.Event;
 
 public class Main extends ApplicationAdapter {
@@ -49,8 +50,9 @@ public class Main extends ApplicationAdapter {
 		sr = new ShapeRenderer();
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
+
 		mainScreen = new MainScreen(this.dataHandler);
+		this.dataHandler.addRequest(Request.load);
 		
 		// event handling
 				InputMultiplexer multiplexer = new InputMultiplexer();

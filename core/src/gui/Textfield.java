@@ -3,6 +3,8 @@ package gui;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -27,6 +29,8 @@ public class Textfield extends Label implements Clickable{
 		this.is_active = true;
 		this.cursor = new Cursor(this);
 		this.subWidgets.add(cursor);
+		if(Gdx.app.getType() == Application.ApplicationType.Android)
+			Gdx.input.setOnscreenKeyboardVisible(true);
 	}
 	
 	@Override
@@ -49,11 +53,15 @@ public class Textfield extends Label implements Clickable{
 	@Override
 	public void activate() {
 		this.is_active = true;
+		if(Gdx.app.getType() == Application.ApplicationType.Android)
+			Gdx.input.setOnscreenKeyboardVisible(false);
 	}
 
 	@Override
 	public void deactivate() {
 		this.is_active = false;
+		if(Gdx.app.getType() == Application.ApplicationType.Android)
+			Gdx.input.setOnscreenKeyboardVisible(false);
 	}
 	
 	

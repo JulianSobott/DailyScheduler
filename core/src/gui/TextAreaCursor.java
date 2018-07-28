@@ -40,9 +40,9 @@ public class TextAreaCursor extends Widget {
 			calc_absolute_position();
 			sr.begin(ShapeType.Filled);
 			sr.setColor(new Color(.05f, 0.01f, 1.0f, 1));
-			sr.line(get_absolute_x(), get_absolute_y() - extra_height/2, get_absolute_x(), get_absolute_y() - extra_height/2 + get_absolute_height());
+			sr.rectLine(get_absolute_x(), get_absolute_y() - extra_height/2, get_absolute_x(), get_absolute_y() - extra_height/2 + get_absolute_height(), 4);
 			sr.end();
-			
+
 		}
 	}
 	
