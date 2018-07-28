@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import datahandling.DataHandler;
 import debug.Profiler;
 import gui.Label;
+import gui.Menu;
 import gui.Scene;
 import gui.TaskField;
 import gui.Textarea;
@@ -31,6 +32,7 @@ public class MainScreen extends Scene implements InputProcessor{
 	
 	public Timeline timeline = new Timeline();
 	public List<TaskField> taskFields = new ArrayList<TaskField>();
+	private Menu menu = new Menu();
 	
 	@Override
 	public void render(ShapeRenderer sr, SpriteBatch sb) {
@@ -40,6 +42,8 @@ public class MainScreen extends Scene implements InputProcessor{
 		for(TaskField taskField : taskFields) {
 			taskField.render(sr, sb);
 		}
+		
+		menu.render(sr, sb);
 	}
 
 	@Override
@@ -67,9 +71,11 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {		
+		super.touchDown(screenX, screenY, pointer, button);
 		for(TaskField tf : taskFields) {
 			tf.deactivate(); 
 		}
+		boolean clicked = false;
 		for(Widget widget : subWidgets) {
 			if(widget.check_on_click(new Vector2(screenX, screenY))) {
 				if(widget instanceof TaskField) {
@@ -83,6 +89,8 @@ public class MainScreen extends Scene implements InputProcessor{
 				return true;
 			}
 		}
+		if(clicked) 
+			return true;
 
 		touchStart = new Vector2(screenX, screenY);
 		TaskField taskField = new TaskField(this, timeline);
@@ -98,11 +106,15 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		super.touchUp(screenX, screenY, pointer, button);
+		this.menu.checkTouchUp(new Vector2(screenX, screenY));
+		this.menu.hide();
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		super.touchDragged(screenX, screenY, pointer);
 		boolean overlaps = false;
 		TaskField active_tf = this.taskFields.get(this.idx_active_task_field);
 		Bounds previousBounds = new Bounds(active_tf.bounds);
@@ -121,14 +133,22 @@ public class MainScreen extends Scene implements InputProcessor{
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
+		super.mouseMoved(screenX, screenY);
 		return false;
 	}
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		super.scrolled(amount);
 		return false;
+	}
+	
+	@Override
+	public void longPress(int screenX, int screenY) {
+		TaskField active_tf = this.taskFields.get(this.idx_active_task_field);
+		if(Bounds.is_position_inside(new Vector2(screenX, screenY), active_tf)) {
+			this.menu = new Menu(active_tf, screenX, screenY);
+		}
 	}
 
 	@Override

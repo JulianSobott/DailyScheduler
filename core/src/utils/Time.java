@@ -61,4 +61,8 @@ public class Time {
 		int minute = i % 60;
 		return new Time(hour, minute);
 	}
+	
+	public static float millisToSeconds(long millis) {
+		return millis / 1000;
+	}
 }

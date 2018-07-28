@@ -11,6 +11,7 @@ import datahandling.http.PostAction;
 import datahandling.http.Response;
 import datahandling.http.Status;
 import debug.Profiler;
+import utils.Logger;
 import utils.Time;
 
 public class DataHandler extends Thread{
@@ -60,12 +61,12 @@ public class DataHandler extends Thread{
 		dataString = createDataString();
 		boolean savedLocal = saveLocal();
 		if(savedLocal)
-			System.out.print("Successfully saved Local  "); 
+			Logger.log("Successfully saved Local  ", Logger.info | Logger.datahandling);
 		boolean savedOnline = saveOnline();
 		if(savedOnline)
-			System.out.println("--- Successfully saved online");
+			Logger.log("--- Successfully saved online  ", Logger.info | Logger.datahandling);
 		if(!savedLocal && !savedOnline)
-			System.err.println("ERROR: Failed to save");
+			Logger.log("ERROR: Failed to save", Logger.error | Logger.datahandling);
 	}
 
 	private void load() {
@@ -77,7 +78,7 @@ public class DataHandler extends Thread{
 			loadOnline();
 		}
 		else {
-			System.err.println("No File to Load from (neither online nor local)");
+			Logger.log("No File to Load from (neither online nor local)", Logger.warning | Logger.datahandling);
 		}
 	}
 	
@@ -110,7 +111,7 @@ public class DataHandler extends Thread{
 		if(response.status == Status.successfully) {
 			return true;
 		}else {
-			System.err.println("ERROR: Saving file online! \n" + response.status + "--" + response.message + "\n");
+			Logger.log("ERROR: Saving file online! \n" + response.status + "--" + response.message + "\n", Logger.error | Logger.datahandling);
 			return false;
 		}
 	}

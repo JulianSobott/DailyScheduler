@@ -98,5 +98,9 @@ public class Bounds{
 		
 		return true;
 	}
+
+	public static Vector2 absScrennToAbsParent(Vector2 absScreen, Widget parent) {
+		return new Vector2(absScreen.x - parent.get_absolute_x(), absScreen.y - parent.get_absolute_y());
+	}
 	
 }
