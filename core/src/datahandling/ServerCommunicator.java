@@ -5,33 +5,27 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net.HttpMethods;
+import com.badlogic.gdx.Net.HttpRequest;
+import com.badlogic.gdx.Net.HttpResponse;
+import com.badlogic.gdx.Net.HttpResponseListener;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 
 import datahandling.http.PostAction;
 import datahandling.http.Response;
 import datahandling.http.Status;
+import utils.Logger;
 
-public class ServerCommunicator {
+public class ServerCommunicator implements HttpResponseListener{
 	
 	public enum Action{
 		save
 	}
 	
 	private String URL = "http://daily_scheduler.com/saver.php";
-	private HttpClient client = HttpClients.createDefault();
-	private HttpPost post = new HttpPost(URL);
-	
-	private HttpResponse response = null;
-	private HttpEntity entity;
+	private Response t_resp = new Response();
+	private boolean requestHandled = false;
 	
 	public ServerCommunicator() {
 		
@@ -39,31 +33,44 @@ public class ServerCommunicator {
 	}
 
 	public Response post(PostAction action, String value) {
-		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-		nvps.add(new BasicNameValuePair(action.action_string, value));
+		HttpRequest httpRequest = new HttpRequest();
+		httpRequest.setMethod(HttpMethods.POST);
+		httpRequest.setUrl(URL);
+		httpRequest.setContent(action.action_string+ "=" + value );
+			
+		Gdx.net.sendHttpRequest(httpRequest, this);	
 		
-		try {
-			post.setEntity(new UrlEncodedFormEntity(nvps));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}		
-		
-		Response t_resp = new Response();
-		try {
-			response = client.execute(post);	
-			entity = response.getEntity();			
-			t_resp.message = EntityUtils.toString(response.getEntity());
-			if( response.getStatusLine().toString() != "500") {
-				t_resp.status = Status.successfully;
+		while(!requestHandled) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
 			}
-			else {
-				t_resp.status = Status.failed;
-			}
-		} catch (ClientProtocolException e) { 
-			t_resp.status = Status.server_offline;
-		} catch (IOException e) {
-			t_resp.status = Status.server_offline;
 		}
 		return t_resp;
+	}
+
+	@Override
+	public void handleHttpResponse(HttpResponse httpResponse) {
+		t_resp.message = httpResponse.getResultAsString();
+		t_resp.status = Status.successfully;
+		requestHandled = true;
+	}
+
+	@Override
+	public void failed(Throwable t) {
+		//t.printStackTrace();
+		t_resp.message = t.getMessage();
+		t_resp.status = Status.failed;
+		requestHandled = true;
+	}
+
+	@Override
+	public void cancelled() {
+		Logger.log("Http post canceled", Logger.warning | Logger.datahandling);
+		t_resp.message = "HTTP response canceled";
+		t_resp.status = Status.failed;
+		requestHandled = true;
 	}
 }

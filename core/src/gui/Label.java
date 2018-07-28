@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Align;
 
+import debug.Profiler;
 import gui.utils.Bounds;
 import gui.utils.Padding;
 import utils.FontManager;

@@ -48,7 +48,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-
     }
 }
 
@@ -77,8 +76,6 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
-        compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
-
     }
 }
 
@@ -90,8 +87,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.10'
-        compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+
     }
 }
 

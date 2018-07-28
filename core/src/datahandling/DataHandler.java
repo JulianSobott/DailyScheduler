@@ -62,11 +62,11 @@ public class DataHandler extends Thread{
 		boolean savedLocal = saveLocal();
 		if(savedLocal)
 			Logger.log("Successfully saved Local  ", Logger.info | Logger.datahandling);
-		boolean savedOnline = saveOnline();
-		if(savedOnline)
-			Logger.log("--- Successfully saved online  ", Logger.info | Logger.datahandling);
-		if(!savedLocal && !savedOnline)
-			Logger.log("ERROR: Failed to save", Logger.error | Logger.datahandling);
+		//boolean savedOnline = saveOnline();
+		//if(savedOnline)
+		//	Logger.log("Successfully saved online  ", Logger.info | Logger.datahandling);
+		//if(!savedLocal && !savedOnline)
+		//	Logger.log("ERROR: Failed to save", Logger.error | Logger.datahandling);
 	}
 
 	private void load() {
@@ -100,8 +100,7 @@ public class DataHandler extends Thread{
 	
 	private boolean saveLocal() {
 		FileHandle file = Gdx.files.local(FILE_PATH);
-		if(!file.exists())
-			return false;
+
 		file.writeString(dataString, false);
 		return true;
 	}

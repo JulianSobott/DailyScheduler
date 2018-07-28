@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
+import debug.Profiler;
 import gui.utils.Bounds;
 import utils.FontManager;
 import utils.Time;
@@ -22,9 +23,8 @@ public class TimeBox extends Label {
 	public TimeBox(Widget parent, float y, float width) {
 		super();
 		this.parent = parent;
-		
-		this.bounds = new Bounds(this.parent.get_absolute_width(), 	y, width, getLineHeight(), Bounds.relative_y);
 
+		this.bounds = new Bounds(this.parent.get_absolute_width(), 	y, width, getLineHeight(), Bounds.relative_y);
 		this.centered_y = true;
 	}
 

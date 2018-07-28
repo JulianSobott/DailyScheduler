@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import datahandling.Task;
 import debug.Profiler;
 import gui.utils.Bounds;
+import utils.FontManager;
 import utils.Time;
 
 public class TaskField extends Widget implements Clickable{
@@ -32,14 +33,14 @@ public class TaskField extends Widget implements Clickable{
 		is_active = true;
 		this.parent = scene;
 		this.parentScene = scene;
-		
+
 		//DRAGGER
 		draggerTop = new Dragger(this, 0.5f, 0);
 		this.subWidgets.add(draggerTop);
 		draggerBot = new Dragger(this, 0.5f, 1);
 		draggerBot.is_active = true;
 		this.subWidgets.add(draggerBot);
-		
+
 		//TIME BOXES
 		float timeBoxWidth = timeLine.get_width_of_left_column() - timeLine.MARGIN;
 		time_box_start = new TimeBox(this, 0,  timeBoxWidth);
@@ -48,15 +49,15 @@ public class TaskField extends Widget implements Clickable{
 		this.subWidgets.add(time_box_start);
 		this.subWidgets.add(time_box_duration);
 		this.subWidgets.add(time_box_end);
-		
+
 		//Textfield
 		textarea = new Textarea(this, 0, 0, 1f, 1.f,
 				Bounds.relative_x | Bounds.relative_y | Bounds.relative_width | Bounds.relative_height);
 		this.subWidgets.add(textarea);
-		
+
 		//Task
 		this.task = new Task();
-		
+
 		this.update();
 	}
 	

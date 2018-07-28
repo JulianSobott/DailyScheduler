@@ -70,7 +70,7 @@ public class MainScreen extends Scene implements InputProcessor{
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {		
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		super.touchDown(screenX, screenY, pointer, button);
 		for(TaskField tf : taskFields) {
 			tf.deactivate(); 
@@ -92,15 +92,16 @@ public class MainScreen extends Scene implements InputProcessor{
 		if(clicked) 
 			return true;
 
+		Profiler.start("new taskfield", 104);
 		touchStart = new Vector2(screenX, screenY);
 		TaskField taskField = new TaskField(this, timeline);
-		
+		Profiler.end(104);
 		taskField.set_start(screenY);
 		taskFields.add(taskField);
 		this.subWidgets.add(taskField);
 		idx_active_task_field = taskFields.size() - 1;
-		
 		addedNewWidgetForSaving(taskField);
+		Profiler.end(100);
 		return false;
 	}
 
